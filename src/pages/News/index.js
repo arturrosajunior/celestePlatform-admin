@@ -5,8 +5,6 @@ const PageNews = () => {
   return (
     <div>
       <h1>Cadastrar News</h1>
-
-      
     </div>
   );
 };

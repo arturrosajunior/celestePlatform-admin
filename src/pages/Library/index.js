@@ -3,8 +3,9 @@ import React, { useState } from "react";
 import Box from "@mui/material/Box";
 
 import Modal from "@mui/material/Modal";
-import Button from "@mui/material/Button";
 import FormLibrary from "components/Library/Form";
+import { Stack, Button, Divider, Typography } from "@mui/material";
+import ListLibrary from "components/Library/ListLibrary";
 
 const style = {
   position: "absolute",
@@ -33,7 +34,17 @@ const PageLibrary = () => {
     <div>
       <h1>Library</h1>
 
-      <Button variant="outlined" onClick={handleOpen}>Cadastrar library</Button>
+      <Stack
+        direction="row"
+        divider={<Divider orientation="vertical" flexItem />}
+        spacing={2}
+        justifyContent="flex-end"
+        alignItems="center"
+      >
+        <Button variant="outlined" onClick={handleOpen}>
+          Cadastrar library
+        </Button>
+      </Stack>
 
       <Modal
         open={open}
@@ -42,13 +53,21 @@ const PageLibrary = () => {
         aria-describedby="parent-modal-description"
         ref={{}}
       >
-         <Box
-      sx={{ ...style, "& > :not(style)": { mb: 6, width: "100%" } }}
-      noValidate
-      autoComplete="off"
-    >
-        <FormLibrary /></Box>
+        <Box
+          sx={{ ...style, "& > :not(style)": { mb: 6, width: "100%" } }}
+          noValidate
+          autoComplete="off"
+        >
+          <FormLibrary />
+        </Box>
       </Modal>
+
+      <Box sx={{mt:5}}>
+        <Typography variant="h6">
+          Todas as librarys
+        </Typography>
+        <ListLibrary />
+      </Box>
     </div>
   );
 };
