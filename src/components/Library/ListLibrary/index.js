@@ -19,18 +19,20 @@ const ListLibrary = () => {
   const [rows, setRows] = useState([]);
 
   useEffect(() => {
-    API
-    .get("library_items")
-    .then((response) => console.log(response.data))
-    .catch((err) => {
-      console.error("ops! ocorreu um erro" + err);
-    });
+    API.get("library_items")
+      .then((response) => {
+        console.log(response.data);
+        setRows([]);
+      })
+      .catch((err) => {
+        console.error("ops! ocorreu um erro" + err);
+      });
   }, []);
 
   return (
-      <div style={{ height: 600, width: "100%" }}>
-        <DataGrid rows={rows} columns={columns} checkboxSelection pageSize={5} />
-      </div>
+    <div style={{ height: 600, width: "100%" }}>
+      <DataGrid rows={rows} columns={columns} checkboxSelection pageSize={5} />
+    </div>
   );
 };
 
