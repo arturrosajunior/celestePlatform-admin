@@ -30,16 +30,12 @@ const initialValues = {
 
 const FormLibrary = () => {
   const [values, setValues] = useState(initialValues);
-  const [valuesAux, setValuesAux] = useState(values);
 
   function onChange(ev) {
     const { name, value } = ev.target;
     setValues({ ...values, [name]: value });
   }
-//depois apagar isso nao precisa do aux
-  function onConsoleLod() {
-    setValuesAux({ ...valuesAux, ...values });
-  }
+
   return (
     <Box
       component="form"
@@ -134,7 +130,7 @@ const FormLibrary = () => {
           />
         </Grid>
 
-        <Grid item sm={6}>
+        <Grid item sm={4}>
           <TextField
             onChange={onChange}
             sx={{ ...styleInput }}
@@ -151,7 +147,7 @@ const FormLibrary = () => {
           />
         </Grid>
 
-        <Grid item sm={6}>
+        <Grid item sm={4}>
           <TextField
             onChange={onChange}
             sx={{ ...styleInput }}
@@ -168,7 +164,7 @@ const FormLibrary = () => {
           />
         </Grid>
 
-        <Grid item sm={12}>
+        <Grid item sm={4}>
           <TextField
             onChange={onChange}
             sx={{ ...styleInput }}
@@ -188,14 +184,11 @@ const FormLibrary = () => {
         <Button
           variant="contained"
           endIcon={<SendIcon />}
-          onClick={onConsoleLod}
         >
           Cadastrar
         </Button>
       </Grid>
-      <p>
-        {valuesAux.txtpt} - {valuesAux.txten} - {valuesAux.keywords} - {valuesAux.ref} - {valuesAux.link1} - {valuesAux.link2} - {valuesAux.dataPublish}
-      </p>
+    
     </Box>
   );
 };
