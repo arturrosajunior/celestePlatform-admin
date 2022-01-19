@@ -20,8 +20,8 @@ const ListLibrary = () => {
 
   useEffect(() => {
     API
-    .get("users")
-    .then((response) => setRows(response.data))
+    .get("library_items")
+    .then((response) => console.log(response.data))
     .catch((err) => {
       console.error("ops! ocorreu um erro" + err);
     });
