@@ -91,7 +91,7 @@ const ListLibrary = () => {
 
   return (
     <>
-    <h2>Faz um favor clica no <marquee>DELETE kkkkk</marquee></h2>
+    <h2>Faz um favor clica no DELETE kkkkk</h2>
     <div style={{ height: 600, width: "100%" }}>
       <DataGrid
         rows={rows}
