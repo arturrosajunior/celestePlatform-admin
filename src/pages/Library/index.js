@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import API from "services/api";
 
 import Box from "@mui/material/Box";
 
@@ -21,8 +22,47 @@ const style = {
   pb: 3,
 };
 
+
+/*
+ * Function that returns a grid with API information
+ */
+
 const PageLibrary = () => {
+
   const [open, setOpen] = useState(false);
+  const [rows, setRows] = useState([]);
+
+  function handleGetRows() {
+
+    // colocar um loading
+    
+    API.get("library_items")
+    .then((response) => {
+      
+      const rowNovo = response.data.data.map((item) => {
+        return {
+          id: item.id,
+          content: item.content,
+          news_content: item.news_content,
+          keywords: item.keywords,
+          news_publication_date: item.news_publication_date,
+          news_link: item.news_link,
+          news_reference: item.news_reference,
+          news_source: item.news_source,
+        };
+      });
+      setRows([...rowNovo]);
+    })
+    .catch((err) => {
+      console.error("ops! ocorreu um erro" + err);
+    });
+    // end colocar um loading
+  }
+  
+  useEffect(() => {
+    handleGetRows(setRows);
+  }, []);
+
   const handleOpen = () => {
     setOpen(true);
   };
@@ -67,7 +107,7 @@ const PageLibrary = () => {
         <Typography variant="h6">
           Todas as librarys
         </Typography>
-        <ListLibrary />
+        <ListLibrary listLibrarys={rows} handleList={handleGetRows} />
       </Box>
     </div>
   );

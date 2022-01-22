@@ -11,6 +11,7 @@ import PublicIcon from "@mui/icons-material/Public";
 import LinkIcon from "@mui/icons-material/Link";
 import { CalendarToday } from "@mui/icons-material";
 import SendIcon from "@mui/icons-material/Send";
+import LoadingButton from '@mui/lab/LoadingButton';
 
 const styleInput = {
   width: "100%",
@@ -35,7 +36,10 @@ const FormLibrary = () => {
     const { name, value } = ev.target;
     setValues({ ...values, [name]: value });
   }
-
+  const [loading, setLoading] = React.useState(false);
+  function handleClick() {
+    setLoading(true);
+  }
   return (
     <Box
       component="form"
@@ -187,6 +191,16 @@ const FormLibrary = () => {
         >
           Cadastrar
         </Button>
+
+        <LoadingButton
+  loadingPosition="start"
+  startIcon={<SendIcon />}
+  variant="outlined"
+  onClick={handleClick}
+  loading={loading}
+>
+  Save
+</LoadingButton>
       </Grid>
     
     </Box>
