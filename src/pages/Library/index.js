@@ -99,7 +99,7 @@ const PageLibrary = () => {
           noValidate
           autoComplete="off"
         >
-          <FormLibrary />
+          <FormLibrary handleList={handleGetRows} />
         </Box>
       </Modal>
 

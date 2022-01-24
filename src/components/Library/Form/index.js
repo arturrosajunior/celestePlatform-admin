@@ -29,7 +29,7 @@ const initialValues = {
   news_publication_date: "",
 };
 
-const FormLibrary = () => {
+const FormLibrary = (props) => {
   const [values, setValues] = useState(initialValues);
   const [loading, setLoading] = useState(false);
 
@@ -42,7 +42,10 @@ const FormLibrary = () => {
   function sendPostLibrary() {
     handleClick(true);
     API.post("library_item/", values).then((response) => {
-      if(response.data.success) setLoading(!response.data.success);
+      if(response.data.success) {
+        setLoading(!response.data.success);
+        props.handleList();
+      }
     });
     //reset form
     setValues(initialValues);
