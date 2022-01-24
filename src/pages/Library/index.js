@@ -121,7 +121,9 @@ const PageLibrary = () => {
 
       <Snackbar open={openMsg} autoHideDuration={2000} onClose={handleClose}>
         <Alert onClose={handleClose} severity="success" sx={{ width: "100%" }}>
-          <img src="https://static.imgs.app/content/2.0.0/assetz/uploads/fun/09/21/12/13/xKLyYZjHs41CYnxfwSPg9wZJfbau8zWhj7Ut8V8zUIu4tL7D1Lb68y6BD5PR-8126417631632237226-156858-fs.gif" alt="zoeira" />
+          {/* <img src="https://static.imgs.app/content/2.0.0/assetz/uploads/fun/09/21/12/13/xKLyYZjHs41CYnxfwSPg9wZJfbau8zWhj7Ut8V8zUIu4tL7D1Lb68y6BD5PR-8126417631632237226-156858-fs.gif" alt="zoeira" /> */}
+
+          Cadastrado com sucesso!
         </Alert>
       </Snackbar>
     </div>
