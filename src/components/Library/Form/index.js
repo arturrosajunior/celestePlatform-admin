@@ -3,12 +3,6 @@ import React, { useState } from "react";
 import { Grid } from "@mui/material";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
-import InputAdornment from "@mui/material/InputAdornment";
-import TextFieldsIcon from "@mui/icons-material/TextFields";
-import KeyIcon from "@mui/icons-material/Key";
-import PublicIcon from "@mui/icons-material/Public";
-import LinkIcon from "@mui/icons-material/Link";
-import { CalendarToday } from "@mui/icons-material";
 import SendIcon from "@mui/icons-material/Send";
 import LoadingButton from "@mui/lab/LoadingButton";
 
@@ -29,9 +23,12 @@ const initialValues = {
   news_publication_date: "",
 };
 
+
+
 const FormLibrary = (props) => {
   const [values, setValues] = useState(initialValues);
   const [loading, setLoading] = useState(false);
+
 
   function onChange(ev) {
     const { name, value } = ev.target;
@@ -45,6 +42,7 @@ const FormLibrary = (props) => {
       if(response.data.success) {
         setLoading(!response.data.success);
         props.handleList();
+        props.handleOpenSuccess();
       }
     });
     //reset form
@@ -73,13 +71,6 @@ const FormLibrary = (props) => {
             rows={2}
             value={values.content}
             name="content"
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <TextFieldsIcon />
-                </InputAdornment>
-              ),
-            }}
           />
         </Grid>
         <Grid item sm={12}>
@@ -92,13 +83,6 @@ const FormLibrary = (props) => {
             rows={2}
             name="news_content"
             value={values.news_content}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <TextFieldsIcon />
-                </InputAdornment>
-              ),
-            }}
           />
         </Grid>
         <Grid item sm={12}>
@@ -110,13 +94,6 @@ const FormLibrary = (props) => {
             multiline
             name="keywords"
             value={values.keywords}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <KeyIcon />
-                </InputAdornment>
-              ),
-            }}
           />
         </Grid>
         <Grid item sm={6}>
@@ -127,13 +104,6 @@ const FormLibrary = (props) => {
             variant="standard"
             name="news_source"
             value={values.news_source}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <PublicIcon />
-                </InputAdornment>
-              ),
-            }}
           />
         </Grid>
         <Grid item sm={6}>
@@ -144,13 +114,6 @@ const FormLibrary = (props) => {
             variant="standard"
             name="news_reference"
             value={values.news_reference}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <PublicIcon />
-                </InputAdornment>
-              ),
-            }}
           />
         </Grid>
         <Grid item sm={6}>
@@ -161,13 +124,6 @@ const FormLibrary = (props) => {
             variant="standard"
             name="news_link"
             value={values.news_link}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <LinkIcon />
-                </InputAdornment>
-              ),
-            }}
           />
         </Grid>
         <Grid item sm={6}>
@@ -176,15 +132,9 @@ const FormLibrary = (props) => {
             sx={{ ...styleInput }}
             label="Data Publicação"
             variant="standard"
+            type="date"
             name="news_publication_date"
             value={values.news_publication_date}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <CalendarToday />
-                </InputAdornment>
-              ),
-            }}
           />
         </Grid>
 
@@ -197,7 +147,9 @@ const FormLibrary = (props) => {
         >
           Save
         </LoadingButton>
+        
       </Grid>
+
     </Box>
   );
 };
