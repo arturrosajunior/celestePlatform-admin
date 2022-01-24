@@ -3,7 +3,6 @@ import React, { useState } from "react";
 import { Grid } from "@mui/material";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
-import Button from "@mui/material/Button";
 import InputAdornment from "@mui/material/InputAdornment";
 import TextFieldsIcon from "@mui/icons-material/TextFields";
 import KeyIcon from "@mui/icons-material/Key";
@@ -11,7 +10,9 @@ import PublicIcon from "@mui/icons-material/Public";
 import LinkIcon from "@mui/icons-material/Link";
 import { CalendarToday } from "@mui/icons-material";
 import SendIcon from "@mui/icons-material/Send";
-import LoadingButton from '@mui/lab/LoadingButton';
+import LoadingButton from "@mui/lab/LoadingButton";
+
+import API from "services/api";
 
 const styleInput = {
   width: "100%",
@@ -19,27 +20,38 @@ const styleInput = {
 };
 
 const initialValues = {
-  txtpt: "",
-  txten: "",
+  content: "",
+  news_content: "",
   keywords: "",
-  fonte: "",
-  ref: "",
-  link1: "",
-  link2: "",
-  dataPublish: "",
+  news_source: "",
+  news_reference: "",
+  news_link: "",
+  news_publication_date: "",
 };
 
 const FormLibrary = () => {
   const [values, setValues] = useState(initialValues);
+  const [loading, setLoading] = useState(false);
 
   function onChange(ev) {
     const { name, value } = ev.target;
     setValues({ ...values, [name]: value });
+    //console.log(values)
   }
-  const [loading, setLoading] = React.useState(false);
-  function handleClick() {
-    setLoading(true);
+
+  function sendPostLibrary() {
+    handleClick(true);
+    API.post("library_item/", values).then((response) => {
+      if(response.data.success) setLoading(!response.data.success);
+    });
+    //reset form
+    setValues(initialValues);
   }
+
+  function handleClick(changeLoading) {
+    setLoading(changeLoading);
+  }
+
   return (
     <Box
       component="form"
@@ -56,7 +68,8 @@ const FormLibrary = () => {
             variant="standard"
             multiline
             rows={2}
-            name="txtpt"
+            value={values.content}
+            name="content"
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
@@ -74,7 +87,8 @@ const FormLibrary = () => {
             variant="standard"
             multiline
             rows={2}
-            name="txten"
+            name="news_content"
+            value={values.news_content}
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
@@ -92,6 +106,7 @@ const FormLibrary = () => {
             variant="standard"
             multiline
             name="keywords"
+            value={values.keywords}
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
@@ -107,7 +122,8 @@ const FormLibrary = () => {
             sx={{ ...styleInput }}
             label="Fonte"
             variant="standard"
-            name="fonte"
+            name="news_source"
+            value={values.news_source}
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
@@ -123,7 +139,8 @@ const FormLibrary = () => {
             sx={{ ...styleInput }}
             label="Referência"
             variant="standard"
-            name="ref"
+            name="news_reference"
+            value={values.news_reference}
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
@@ -133,14 +150,14 @@ const FormLibrary = () => {
             }}
           />
         </Grid>
-
-        <Grid item sm={4}>
+        <Grid item sm={6}>
           <TextField
             onChange={onChange}
             sx={{ ...styleInput }}
-            label="Link 1"
+            label="Links"
             variant="standard"
-            name="link1"
+            name="news_link"
+            value={values.news_link}
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
@@ -150,31 +167,14 @@ const FormLibrary = () => {
             }}
           />
         </Grid>
-
-        <Grid item sm={4}>
-          <TextField
-            onChange={onChange}
-            sx={{ ...styleInput }}
-            label="Link 2"
-            variant="standard"
-            name="link2"
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <LinkIcon />
-                </InputAdornment>
-              ),
-            }}
-          />
-        </Grid>
-
-        <Grid item sm={4}>
+        <Grid item sm={6}>
           <TextField
             onChange={onChange}
             sx={{ ...styleInput }}
             label="Data Publicação"
             variant="standard"
-            name="dataPublish"
+            name="news_publication_date"
+            value={values.news_publication_date}
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
@@ -185,24 +185,16 @@ const FormLibrary = () => {
           />
         </Grid>
 
-        <Button
-          variant="contained"
-          endIcon={<SendIcon />}
-        >
-          Cadastrar
-        </Button>
-
         <LoadingButton
-  loadingPosition="start"
-  startIcon={<SendIcon />}
-  variant="outlined"
-  onClick={handleClick}
-  loading={loading}
->
-  Save
-</LoadingButton>
+          loadingPosition="start"
+          startIcon={<SendIcon />}
+          variant="outlined"
+          onClick={sendPostLibrary}
+          loading={loading}
+        >
+          Save
+        </LoadingButton>
       </Grid>
-    
     </Box>
   );
 };
