@@ -14,8 +14,8 @@ const styleInput = {
 };
 
 const initialValues = {
-  content: "",
   news_content: "",
+  content: "",
   keywords: "",
   news_source: "",
   news_reference: "",
@@ -23,34 +23,96 @@ const initialValues = {
   news_publication_date: "",
 };
 
+const inputsForm = [
+  {
+    name: "news_publication_date",
+    value: "",
+    label: "Data",
 
+    type: "date",
+    numberGrid: 6,
+  },
+  {
+    name: "news_link",
+    value: "",
+    label: "Link",
+
+    type: "",
+    numberGrid: 6,
+  },
+  {
+    name: "news_reference",
+    value: "",
+    label: "Referência",
+
+    type: "",
+    numberGrid: 6,
+  },
+  {
+    name: "news_source",
+    value: "",
+    label: "Fonte",
+
+    type: "",
+    numberGrid: 6,
+  },
+
+  {
+    name: "news_content",
+    value: "",
+    label: "Texto Original",
+
+    type: "",
+    numberGrid: 12,
+  },
+  {
+    name: "content",
+    value: "",
+    label: "Texto PT",
+
+    type: "",
+    numberGrid: 12,
+  },
+  {
+    name: "keywords",
+    value: "",
+    label: "Keywords",
+
+    type: "",
+    numberGrid: 12,
+  },
+];
 
 const FormLibrary = (props) => {
   const [values, setValues] = useState(initialValues);
   const [loading, setLoading] = useState(false);
 
-
   function onChange(ev) {
     const { name, value } = ev.target;
     setValues({ ...values, [name]: value });
-    //console.log(values)
   }
 
   function sendPostLibrary() {
-    handleClick(true);
-    API.post("library_item/", values).then((response) => {
-      if(response.data.success) {
-        setLoading(!response.data.success);
-        props.handleList();
-        props.handleOpenSuccess();
-      }
-    });
-    //reset form
-    setValues(initialValues);
-  }
-
-  function handleClick(changeLoading) {
-    setLoading(changeLoading);
+    if (
+      values.content !== "" &&
+      values.keywords !== "" &&
+      values.news_content !== "" &&
+      values.news_link !== "" &&
+      values.news_publication_date !== "" &&
+      values.news_reference !== "" &&
+      values.news_source !== ""
+    ) {
+      setLoading(true);
+      API.post("library_item/", values).then((response) => {
+        if (response.data.success) {
+          setLoading(!response.data.success);
+          props.handleList();
+          props.OpenAlertMensage('Library save', 'success', true);
+        }
+      });
+    }else{
+      props.OpenAlertMensage('Required all field', 'error', false);
+    }
   }
 
   return (
@@ -61,83 +123,18 @@ const FormLibrary = (props) => {
       autoComplete="off"
     >
       <Grid container spacing={1}>
-        <Grid item xs={12}>
-          <TextField
-            onChange={onChange}
-            sx={{ ...styleInput }}
-            label="Texto PT"
-            variant="standard"
-            multiline
-            rows={2}
-            value={values.content}
-            name="content"
-          />
-        </Grid>
-        <Grid item sm={12}>
-          <TextField
-            onChange={onChange}
-            sx={{ ...styleInput }}
-            label="Texto EN"
-            variant="standard"
-            multiline
-            rows={2}
-            name="news_content"
-            value={values.news_content}
-          />
-        </Grid>
-        <Grid item sm={12}>
-          <TextField
-            onChange={onChange}
-            sx={{ ...styleInput }}
-            label="Palavras-chave"
-            variant="standard"
-            multiline
-            name="keywords"
-            value={values.keywords}
-          />
-        </Grid>
-        <Grid item sm={6}>
-          <TextField
-            onChange={onChange}
-            sx={{ ...styleInput }}
-            label="Fonte"
-            variant="standard"
-            name="news_source"
-            value={values.news_source}
-          />
-        </Grid>
-        <Grid item sm={6}>
-          <TextField
-            onChange={onChange}
-            sx={{ ...styleInput }}
-            label="Referência"
-            variant="standard"
-            name="news_reference"
-            value={values.news_reference}
-          />
-        </Grid>
-        <Grid item sm={6}>
-          <TextField
-            onChange={onChange}
-            sx={{ ...styleInput }}
-            label="Links"
-            variant="standard"
-            name="news_link"
-            value={values.news_link}
-          />
-        </Grid>
-        <Grid item sm={6}>
-          <TextField
-            onChange={onChange}
-            sx={{ ...styleInput }}
-            label="Data Publicação"
-            variant="standard"
-            type="date"
-            name="news_publication_date"
-            value={values.news_publication_date}
-          />
-        </Grid>
-
+        {inputsForm.map((input, i) => (
+          <Grid item sm={input.numberGrid} key={i}>
+            <TextField
+              onChange={onChange}
+              sx={{ ...styleInput }}
+              placeholder={input.label}
+              variant="standard"
+              type={input.type}
+              name={input.name}
+            />
+          </Grid>
+        ))}
         <LoadingButton
           loadingPosition="start"
           startIcon={<SendIcon />}
@@ -147,9 +144,7 @@ const FormLibrary = (props) => {
         >
           Save
         </LoadingButton>
-        
       </Grid>
-
     </Box>
   );
 };

@@ -24,6 +24,8 @@ const style = {
   pb: 3,
 };
 
+const initialAlert = {textAlert: '', typeAlert: ''};
+
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
@@ -33,16 +35,16 @@ const Alert = React.forwardRef(function Alert(props, ref) {
  */
 
 const PageLibrary = () => {
-  const [open, setOpen] = useState(false);
-  const [openMsg, setOpenMsg] = useState(false);
+  const [openModal, setOpenModal] = useState(false);
+  const [openMenssage, setOpenMenssage] = useState(false);
   const [rows, setRows] = useState([]);
+  const [alertConfig, setAlertConfig] = useState(initialAlert);
 
   function handleGetRows() {
     // colocar um loading
-
     API.get("library_items")
       .then((response) => {
-        const rowNovo = response.data.data.map((item) => {
+        const newRow = response.data.data.map((item) => {
           return {
             id: item.id,
             content: item.content,
@@ -54,7 +56,7 @@ const PageLibrary = () => {
             news_source: item.news_source,
           };
         });
-        setRows([...rowNovo]);
+        setRows([...newRow]);
       })
       .catch((err) => {
         console.error("ops! ocorreu um erro" + err);
@@ -67,16 +69,20 @@ const PageLibrary = () => {
   }, []);
 
   const handleOpen = () => {
-    setOpen(true);
+    setOpenModal(true);
   };
 
-  function handleOpenMsg() {
-    setOpenMsg(true);
+  const handleOpenMenssage = (textAlert, typeAlert, closeModal) => {
+    setOpenMenssage(true);
+    setAlertConfig({textAlert, typeAlert});
+    if(closeModal) setOpenModal(false);
   }
 
-  const handleClose = () => {
-    setOpen(false);
-    setOpenMsg(false);
+  const handleCloseMessage = () => {
+    setOpenMenssage(false);
+  };
+  const handleCloseModal = () => {
+    setOpenModal(false);
   };
 
   return (
@@ -96,8 +102,8 @@ const PageLibrary = () => {
       </Stack>
 
       <Modal
-        open={open}
-        onClose={handleClose}
+        open={openModal}
+        onClose={handleCloseModal}
         aria-labelledby="parent-modal-title"
         aria-describedby="parent-modal-description"
         ref={{}}
@@ -109,7 +115,7 @@ const PageLibrary = () => {
         >
           <FormLibrary
             handleList={handleGetRows}
-            handleOpenSuccess={handleOpenMsg}
+            OpenAlertMensage={handleOpenMenssage}
           />
         </Box>
       </Modal>
@@ -119,11 +125,10 @@ const PageLibrary = () => {
         <ListLibrary listLibrarys={rows} handleList={handleGetRows} />
       </Box>
 
-      <Snackbar open={openMsg} autoHideDuration={2000} onClose={handleClose}>
-        <Alert onClose={handleClose} severity="success" sx={{ width: "100%" }}>
-          {/* <img src="https://static.imgs.app/content/2.0.0/assetz/uploads/fun/09/21/12/13/xKLyYZjHs41CYnxfwSPg9wZJfbau8zWhj7Ut8V8zUIu4tL7D1Lb68y6BD5PR-8126417631632237226-156858-fs.gif" alt="zoeira" /> */}
-
-          Cadastrado com sucesso!
+      {/* alertas */}
+      <Snackbar open={openMenssage} autoHideDuration={1000} onClose={handleCloseMessage}>
+        <Alert onClose={handleCloseMessage} severity={alertConfig.typeAlert} sx={{ width: "100%" }}>
+          {alertConfig.textAlert}
         </Alert>
       </Snackbar>
     </div>
