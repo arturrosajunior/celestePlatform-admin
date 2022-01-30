@@ -26,58 +26,44 @@ const initialValues = {
 const inputsForm = [
   {
     name: "news_publication_date",
-    value: "",
     label: "Data",
-
     type: "date",
     numberGrid: 6,
   },
   {
     name: "news_link",
-    value: "",
     label: "Link",
-
     type: "",
     numberGrid: 6,
   },
   {
     name: "news_reference",
-    value: "",
     label: "Referência",
-
     type: "",
     numberGrid: 6,
   },
   {
     name: "news_source",
-    value: "",
     label: "Fonte",
-
     type: "",
     numberGrid: 6,
   },
 
   {
     name: "news_content",
-    value: "",
     label: "Texto Original",
-
     type: "",
     numberGrid: 12,
   },
   {
     name: "content",
-    value: "",
     label: "Texto PT",
-
     type: "",
     numberGrid: 12,
   },
   {
     name: "keywords",
-    value: "",
     label: "Keywords",
-
     type: "",
     numberGrid: 12,
   },
@@ -107,11 +93,11 @@ const FormLibrary = (props) => {
         if (response.data.success) {
           setLoading(!response.data.success);
           props.handleList();
-          props.OpenAlertMensage('Library save', 'success', true);
+          props.OpenAlertMensage("Library save", "success", true);
         }
       });
-    }else{
-      props.OpenAlertMensage('Required all field', 'error', false);
+    } else {
+      props.OpenAlertMensage("Required all field", "error", false);
     }
   }
 

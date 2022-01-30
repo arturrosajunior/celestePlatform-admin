@@ -59,7 +59,7 @@ const PageLibrary = () => {
         setRows([...newRow]);
       })
       .catch((err) => {
-        console.error("ops! ocorreu um erro" + err);
+        handleOpenMenssage('textAlert', 'typeAlert', false);
       });
     // end colocar um loading
   }
@@ -68,7 +68,7 @@ const PageLibrary = () => {
     handleGetRows(setRows);
   }, []);
 
-  const handleOpen = () => {
+  const handleOpenModal = () => {
     setOpenModal(true);
   };
 
@@ -96,7 +96,7 @@ const PageLibrary = () => {
         justifyContent="flex-end"
         alignItems="center"
       >
-        <Button variant="outlined" onClick={handleOpen}>
+        <Button variant="outlined" onClick={handleOpenModal}>
           Cadastrar library
         </Button>
       </Stack>
@@ -122,11 +122,11 @@ const PageLibrary = () => {
 
       <Box sx={{ mt: 5 }}>
         <Typography variant="h6">Todas as librarys</Typography>
-        <ListLibrary listLibrarys={rows} handleList={handleGetRows} />
+        <ListLibrary listLibrarys={rows} handleList={handleGetRows} OpenAlertMensage={handleOpenMenssage}/>
       </Box>
 
       {/* alertas */}
-      <Snackbar open={openMenssage} autoHideDuration={1000} onClose={handleCloseMessage}>
+      <Snackbar open={openMenssage} autoHideDuration={1800} onClose={handleCloseMessage}>
         <Alert onClose={handleCloseMessage} severity={alertConfig.typeAlert} sx={{ width: "100%" }}>
           {alertConfig.textAlert}
         </Alert>
