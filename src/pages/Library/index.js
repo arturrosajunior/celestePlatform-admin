@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import API from "services/api";
 
 import Box from "@mui/material/Box";
@@ -40,7 +40,8 @@ const PageLibrary = () => {
   const [rows, setRows] = useState([]);
   const [alertConfig, setAlertConfig] = useState(initialAlert);
 
-  function handleGetRows() {
+  // eslint-disable-next-line
+  const handleGetRows = useCallback(() => {
     // colocar um loading
     API.get("library_items")
       .then((response) => {
@@ -62,11 +63,11 @@ const PageLibrary = () => {
         handleOpenMenssage('textAlert', 'typeAlert', false);
       });
     // end colocar um loading
-  }
+  }, []);
 
   useEffect(() => {
-    handleGetRows(setRows);
-  }, []);
+    handleGetRows();
+  }, [handleGetRows]);
 
   const handleOpenModal = () => {
     setOpenModal(true);
