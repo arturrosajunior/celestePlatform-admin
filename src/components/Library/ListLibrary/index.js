@@ -32,6 +32,8 @@ const ListLibrary = (props) => {
 
   const handleClose = () => {
     setOpen(false);
+    props.OpenAlertMensage("Cuidado, você está tentando deletar!", "warning", true);
+
   };
 
   const columns = [
