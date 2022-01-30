@@ -42,7 +42,7 @@ const ListLibrary = (props) => {
     { field: "content", headerName: "Português", width: 180 },
     { field: "news_content", headerName: "Inglês", width: 180 },
     { field: "keywords", headerName: "keywords", width: 180 },
-    // { field: "news_link", headerName: "Links", width: 180 },
+    { field: "news_link", headerName: "Links", width: 180 },
     { field: "news_reference", headerName: "Referência", width: 180 },
     { field: "news_source", headerName: "Fonte", width: 180 },
     {
