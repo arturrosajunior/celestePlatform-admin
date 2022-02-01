@@ -32,8 +32,15 @@ const ListLibrary = (props) => {
 
   const handleClose = () => {
     setOpen(false);
-    props.OpenAlertMensage("Cuidado, você está tentando deletar!", "warning", true);
+  };
 
+  const noDelete = () => {
+    props.OpenAlertMensage(
+      "Cuidado, você está tentando deletar!",
+      "warning",
+      true
+    );
+    handleClose();
   };
 
   const columns = [
@@ -69,7 +76,6 @@ const ListLibrary = (props) => {
       .then((res) => {
         props.handleList();
         props.OpenAlertMensage("Library Delete", "success", true);
-
       })
       .catch((err) => {
         console.error("ops! ocorreu um erro" + err);
@@ -85,6 +91,10 @@ const ListLibrary = (props) => {
           columns={columns}
           checkboxSelection={false}
           pageSize={10}
+          onSelectionModelChange={(ids) => {
+            setOpen(true);
+            console.log(ids.toString());
+          }}
         />
       </div>
       <div>
@@ -99,13 +109,15 @@ const ListLibrary = (props) => {
           </DialogTitle>
           <DialogContent>
             <DialogContentText id="alert-dialog-description">
-              Texto Original: {content.news_content} <br /><br />
-              Texto PT: {content.content} <br /><br />
+              Texto Original: {content.news_content} <br />
+              <br />
+              Texto PT: {content.content} <br />
+              <br />
               Data: {content.news_publication_date}
             </DialogContentText>
           </DialogContent>
           <DialogActions>
-            <Button onClick={handleClose}>Fechar</Button>
+            <Button onClick={noDelete}>Não</Button>
             <Button onClick={deleteApi}>Apargar</Button>
           </DialogActions>
         </Dialog>
