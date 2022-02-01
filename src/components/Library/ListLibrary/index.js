@@ -31,8 +31,6 @@ const ListLibrary = (props) => {
   const [content, setContent] = useState([]);
   const [idDelete, setIdDelete] = useState("");
 
-  console.log(props.loadingAPI);
-  console.log(props.listLibrarys);
 
   const handleClose = () => {
     setOpen(false);
@@ -91,7 +89,6 @@ const ListLibrary = (props) => {
     <>
       <div style={{ height: 600, width: "100%" }}>
         <DataGrid
-          loading={props.loadingAPI}
           rows={props.listLibrarys}
           columns={columns}
           checkboxSelection={false}

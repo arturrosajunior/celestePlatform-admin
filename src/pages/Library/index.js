@@ -9,6 +9,7 @@ import { Stack, Button, Divider, Typography } from "@mui/material";
 import ListLibrary from "components/Library/ListLibrary";
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
+import ReactLoading from "react-loading";
 
 const style = {
   position: "absolute",
@@ -24,7 +25,7 @@ const style = {
   pb: 3,
 };
 
-const initialAlert = {textAlert: '', typeAlert: ''};
+const initialAlert = { textAlert: "", typeAlert: "" };
 
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -36,8 +37,8 @@ const Alert = React.forwardRef(function Alert(props, ref) {
 
 const PageLibrary = () => {
   const [openModal, setOpenModal] = useState(false);
+  const [activeLoaging, setActiveLoaging] = useState(true);
   const [openMenssage, setOpenMenssage] = useState(false);
-  const [loadingAPI, setLoadingApi] = useState(true);
 
   const [rows, setRows] = useState([]);
   const [alertConfig, setAlertConfig] = useState(initialAlert);
@@ -62,13 +63,14 @@ const PageLibrary = () => {
         setRows([...newRow]);
       })
       .catch((err) => {
-        handleOpenMenssage('textAlert', 'typeAlert', false);
+        handleOpenMenssage("textAlert", "typeAlert", false);
       });
-      setLoadingApi(false);
+
+    setActiveLoaging(false);
   }, []);
 
   useEffect(() => {
-    handleGetRows();
+    setTimeout(() => handleGetRows(), 3000);
   }, [handleGetRows]);
 
   const handleOpenModal = () => {
@@ -77,9 +79,9 @@ const PageLibrary = () => {
 
   const handleOpenMenssage = (textAlert, typeAlert, closeModal) => {
     setOpenMenssage(true);
-    setAlertConfig({textAlert, typeAlert});
-    if(closeModal) setOpenModal(false);
-  }
+    setAlertConfig({ textAlert, typeAlert });
+    if (closeModal) setOpenModal(false);
+  };
 
   const handleCloseMessage = () => {
     setOpenMenssage(false);
@@ -125,12 +127,31 @@ const PageLibrary = () => {
 
       <Box sx={{ mt: 5 }}>
         <Typography variant="h6">Todas as librarys</Typography>
-        <ListLibrary listLibrarys={rows} loadingAPI={loadingAPI} handleList={handleGetRows} OpenAlertMensage={handleOpenMenssage}/>
+
+        {activeLoaging ? (
+          <Stack height="100%" alignItems="center" justifyContent="center">
+            <ReactLoading type="spinningBubbles" color="#cccccc" />
+          </Stack>
+        ) : (
+          <ListLibrary
+            listLibrarys={rows}
+            handleList={handleGetRows}
+            OpenAlertMensage={handleOpenMenssage}
+          />
+        )}
       </Box>
 
       {/* alertas */}
-      <Snackbar open={openMenssage} autoHideDuration={1800} onClose={handleCloseMessage}>
-        <Alert onClose={handleCloseMessage} severity={alertConfig.typeAlert} sx={{ width: "100%" }}>
+      <Snackbar
+        open={openMenssage}
+        autoHideDuration={1800}
+        onClose={handleCloseMessage}
+      >
+        <Alert
+          onClose={handleCloseMessage}
+          severity={alertConfig.typeAlert}
+          sx={{ width: "100%" }}
+        >
           {alertConfig.textAlert}
         </Alert>
       </Snackbar>
