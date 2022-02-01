@@ -37,6 +37,8 @@ const Alert = React.forwardRef(function Alert(props, ref) {
 const PageLibrary = () => {
   const [openModal, setOpenModal] = useState(false);
   const [openMenssage, setOpenMenssage] = useState(false);
+  const [loadingAPI, setLoadingApi] = useState(true);
+
   const [rows, setRows] = useState([]);
   const [alertConfig, setAlertConfig] = useState(initialAlert);
 
@@ -62,7 +64,7 @@ const PageLibrary = () => {
       .catch((err) => {
         handleOpenMenssage('textAlert', 'typeAlert', false);
       });
-    // end colocar um loading
+      setLoadingApi(false);
   }, []);
 
   useEffect(() => {
@@ -123,7 +125,7 @@ const PageLibrary = () => {
 
       <Box sx={{ mt: 5 }}>
         <Typography variant="h6">Todas as librarys</Typography>
-        <ListLibrary listLibrarys={rows} handleList={handleGetRows} OpenAlertMensage={handleOpenMenssage}/>
+        <ListLibrary listLibrarys={rows} loadingAPI={loadingAPI} handleList={handleGetRows} OpenAlertMensage={handleOpenMenssage}/>
       </Box>
 
       {/* alertas */}

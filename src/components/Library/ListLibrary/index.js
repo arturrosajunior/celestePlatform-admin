@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { DataGrid } from "@mui/x-data-grid";
-import { Button } from "@mui/material";
+import { Button, Typography } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
@@ -8,6 +8,7 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import API from "services/api";
+import Stack from "@mui/material/Stack";
 
 /*
  *.map is made to fix the api response and associate the variable in setRows
@@ -29,6 +30,9 @@ const ListLibrary = (props) => {
   const [open, setOpen] = useState(false);
   const [content, setContent] = useState([]);
   const [idDelete, setIdDelete] = useState("");
+
+  console.log(props.loadingAPI);
+  console.log(props.listLibrarys);
 
   const handleClose = () => {
     setOpen(false);
@@ -87,6 +91,7 @@ const ListLibrary = (props) => {
     <>
       <div style={{ height: 600, width: "100%" }}>
         <DataGrid
+          loading={props.loadingAPI}
           rows={props.listLibrarys}
           columns={columns}
           checkboxSelection={false}
@@ -94,6 +99,21 @@ const ListLibrary = (props) => {
           onSelectionModelChange={(ids) => {
             setOpen(true);
             console.log(ids.toString());
+          }}
+          components={{
+            NoRowsOverlay: () => (
+              <Stack height="100%" alignItems="center" justifyContent="center">
+                <Typography textAlign="center">
+                  Ainda não temos nada para mostrar! <br />
+                  Que tal cadastrar?
+                </Typography>
+              </Stack>
+            ),
+            NoResultsOverlay: () => (
+              <Stack height="100%" alignItems="center" justifyContent="center">
+                Local filter returns no result
+              </Stack>
+            ),
           }}
         />
       </div>

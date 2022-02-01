@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import PageNews from "pages/News";
 import PageDashboard from "pages/Dashboard";
 import PageLibrary from "pages/Library";
+import PageEphemeris from "pages/Ephemeris";
 
 import { styled, useTheme } from "@mui/material/styles";
 import Box from "@mui/material/Box";
@@ -23,6 +24,7 @@ import ListItemText from "@mui/material/ListItemText";
 import FeedTwoToneIcon from "@mui/icons-material/FeedTwoTone";
 import GridViewTwoToneIcon from "@mui/icons-material/GridViewTwoTone";
 import LibraryBooksIcon from "@mui/icons-material/LibraryBooks";
+import EventIcon from '@mui/icons-material/Event';
 
 const drawerWidth = 240;
 
@@ -164,12 +166,25 @@ export default function MiniDrawer() {
                 <ListItemText primary="News" />
               </ListItem>
             </Link>
+
+            <Link to="/ephemeris">
+              <ListItem button key="Ephemeris">
+                <ListItemIcon>
+                  <EventIcon />
+                </ListItemIcon>
+                <ListItemText primary="Ephemeris" />
+              </ListItem>
+            </Link>
+
           </List>
         </Drawer>
         <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
           <DrawerHeader />
 
           <Switch>
+            <Route path="/ephemeris">
+              <Ephemeris />
+            </Route>
             <Route path="/news">
               <News />
             </Route>
@@ -196,4 +211,8 @@ function News() {
 
 function Library() {
   return <PageLibrary />;
+}
+
+function Ephemeris() {
+  return <PageEphemeris />;
 }
