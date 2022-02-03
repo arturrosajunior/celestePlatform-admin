@@ -6,27 +6,24 @@ import TextField from "@mui/material/TextField";
 import SendIcon from "@mui/icons-material/Send";
 import LoadingButton from "@mui/lab/LoadingButton";
 
-import API from "services/api";
-
 const styleInput = {
   width: "100%",
   mb: 3,
 };
 
 const initialValues = {
-  user_id:0,
-  event_date:"",
-  event_time:"",
-  event_title:"",
-  event_description:"",
-  event_location:"",
-  event_link:"",
-  event_image:"",
-  event_ephemeris:1,
-  event_color:"",
-  event_status:""
+  user_id: 0,
+  event_date: "",
+  event_time: "",
+  event_title: "",
+  event_description: "",
+  event_location: "",
+  event_link: "",
+  event_image: "",
+  event_ephemeris: 1,
+  event_color: "",
+  event_status: "",
 };
-
 
 const inputsForm = [
   {
@@ -38,7 +35,7 @@ const inputsForm = [
   {
     name: "event_time",
     label: "Time",
-    type: "",
+    type: "time",
     numberGrid: 6,
   },
   {
@@ -71,14 +68,13 @@ const inputsForm = [
 const FormEphemeris = (props) => {
   const [values, setValues] = useState(initialValues);
   const [loading, setLoading] = useState(false);
-  console.log(values);
 
   function onChange(ev) {
     const { name, value } = ev.target;
     setValues({ ...values, [name]: value });
   }
 
-  function sendPostEphemeri() {
+  const sendPostEphemeri = async () => {
     if (
       values.event_date !== "" &&
       values.event_time !== "" &&
@@ -88,17 +84,16 @@ const FormEphemeris = (props) => {
       values.event_link !== ""
     ) {
       setLoading(true);
-      API.post("calendar_event/", values).then((response) => {
-        if (response.data.success) {
-          setLoading(!response.data.success);
-          props.handleList();
-          props.OpenAlertMensage("Ephemeri save", "success", true);
-        }
-      });
+      const res = await props.handlePost(values);
+      if (res) {
+        setLoading(!res);
+        await props.handleList();
+        props.OpenAlertMensage("Ephemeri save", "success", true);
+      }
     } else {
       props.OpenAlertMensage("Required all field", "error", false);
     }
-  }
+  };
 
   return (
     <Box

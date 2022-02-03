@@ -1,15 +1,15 @@
 import React, { useState, useEffect, useCallback } from "react";
-import API from "services/api";
 
 import Box from "@mui/material/Box";
 
 import Modal from "@mui/material/Modal";
 import FormLibrary from "components/Library/Form";
 import { Stack, Button, Divider, Typography } from "@mui/material";
-import ListLibrary from "components/Library/ListLibrary";
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
 import ReactLoading from "react-loading";
+import GridListItens from "components/GridListItens";
+import * as serviceLibrary from "services/serviceLibrary";
 
 const style = {
   position: "absolute",
@@ -24,6 +24,17 @@ const style = {
   px: 4,
   pb: 3,
 };
+
+const columns = [
+  { field: "id", headerName: "id", width: 2 },
+  { field: "news_publication_date", headerName: "Data", width: 150 },
+  { field: "content", headerName: "Português", width: 180 },
+  { field: "news_content", headerName: "Inglês", width: 180 },
+  { field: "keywords", headerName: "keywords", width: 180 },
+  { field: "news_link", headerName: "Links", width: 180 },
+  { field: "news_reference", headerName: "Referência", width: 180 },
+  { field: "news_source", headerName: "Fonte", width: 180 },
+];
 
 const initialAlert = { textAlert: "", typeAlert: "" };
 
@@ -44,28 +55,25 @@ const PageLibrary = () => {
   const [alertConfig, setAlertConfig] = useState(initialAlert);
 
   // eslint-disable-next-line
-  const handleGetRows = useCallback(() => {
-    // colocar um loading
-    API.get("library_items")
-      .then((response) => {
-        const newRow = response.data.data.map((item) => {
-          return {
-            id: item.id,
-            content: item.content,
-            news_content: item.news_content,
-            keywords: item.keywords,
-            news_publication_date: item.news_publication_date,
-            news_link: item.news_link,
-            news_reference: item.news_reference,
-            news_source: item.news_source,
-          };
-        });
-        setRows([...newRow]);
-      })
-      .catch((err) => {
-        handleOpenMenssage("textAlert", "typeAlert", false);
+  const handleGetRows = useCallback(async () => {
+    const result = await serviceLibrary.getAllItems();
+    if (result.success) {
+      const newRow = result.data.map((item) => {
+        return {
+          id: item.id,
+          content: item.content,
+          news_content: item.news_content,
+          keywords: item.keywords,
+          news_publication_date: item.news_publication_date,
+          news_link: item.news_link,
+          news_reference: item.news_reference,
+          news_source: item.news_source,
+        };
       });
-
+      setRows([...newRow]);
+    } else {
+      console.error("error " + result);
+    }
     setActiveLoaging(false);
   }, []);
 
@@ -133,10 +141,18 @@ const PageLibrary = () => {
             <ReactLoading type="spinningBubbles" color="#cccccc" />
           </Stack>
         ) : (
-          <ListLibrary
-            listLibrarys={rows}
+          // <ListLibrary
+          //   listLibrarys={rows}
+          //   handleList={handleGetRows}
+          //   OpenAlertMensage={handleOpenMenssage}
+          // />
+
+          <GridListItens
+            listRows={rows}
             handleList={handleGetRows}
+            handleDelete={serviceLibrary.deleteItem}
             OpenAlertMensage={handleOpenMenssage}
+            columns={columns}
           />
         )}
       </Box>
