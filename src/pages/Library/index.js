@@ -11,20 +11,7 @@ import FormLibrary from "components/Library/Form";
 import GridListItens from "components/GridListItens";
 import * as serviceLibrary from "services/serviceLibrary";
 
-const style = {
-  position: "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  width: 600,
-  bgcolor: "background.paper",
-  border: "2px solid #ccc",
-  boxShadow: 24,
-  pt: 2,
-  px: 4,
-  pb: 3,
-};
-
+const initialAlert = { textAlert: "", typeAlert: "" };
 const columns = [
   { field: "id", headerName: "id", width: 2 },
   { field: "news_publication_date", headerName: "Data", width: 150 },
@@ -35,8 +22,6 @@ const columns = [
   { field: "news_reference", headerName: "Referência", width: 180 },
   { field: "news_source", headerName: "Fonte", width: 180 },
 ];
-
-const initialAlert = { textAlert: "", typeAlert: "" };
 
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -96,6 +81,7 @@ const PageLibrary = () => {
     setOpenMenssage(true);
     setAlertConfig({ textAlert, typeAlert });
   };
+
   const handleCloseMessage = () => {
     setOpenMenssage(false);
   };
@@ -112,7 +98,7 @@ const PageLibrary = () => {
         alignItems="center"
       >
         <Button variant="outlined" onClick={() => setDrawerState(true)}>
-          Cadastrar library
+          Cadastrar
         </Button>
       </Stack>
 
@@ -138,12 +124,6 @@ const PageLibrary = () => {
             <ReactLoading type="spinningBubbles" color="#cccccc" />
           </Stack>
         ) : (
-          // <ListLibrary
-          //   listLibrarys={rows}
-          //   handleList={handleGetRows}
-          //   OpenAlertMensage={handleOpenMenssage}
-          // />
-
           <GridListItens
             listRows={rows}
             handleList={handleGetRows}

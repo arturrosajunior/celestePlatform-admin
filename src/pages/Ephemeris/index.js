@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import Box from "@mui/material/Box";
-import Modal from "@mui/material/Modal";
+import Drawer from "@mui/material/Drawer";
 import { Stack, Button, Divider, Typography } from "@mui/material";
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
@@ -10,20 +10,6 @@ import FormEphemeris from "components/Ephemeris/Form";
 
 import * as serviceEphemeris from "services/serviceEphemeris";
 
-const style = {
-  position: "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  width: 600,
-  bgcolor: "background.paper",
-  border: "2px solid #ccc",
-  boxShadow: 24,
-  pt: 2,
-  px: 4,
-  pb: 3,
-};
-
 const initialAlert = { textAlert: "", typeAlert: "" };
 const columns = [
   { field: "id", headerName: "id", width: 2 },
@@ -31,6 +17,7 @@ const columns = [
   { field: "event_title", headerName: "Title", width: 150 },
   { field: "event_description", headerName: "Descrição", width: 280 },
 ];
+
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
@@ -40,7 +27,6 @@ const Alert = React.forwardRef(function Alert(props, ref) {
  */
 
 const PageEphemeris = () => {
-  const [openModal, setOpenModal] = useState(false);
   const [activeLoaging, setActiveLoaging] = useState(true);
   const [openMenssage, setOpenMenssage] = useState(false);
   const [rows, setRows] = useState([]);
@@ -62,7 +48,6 @@ const PageEphemeris = () => {
     } else {
       console.error("error " + result);
     }
-
     setActiveLoaging(false);
   }, []);
 
@@ -70,21 +55,26 @@ const PageEphemeris = () => {
     setTimeout(() => handleGetRows(), 3000);
   }, [handleGetRows]);
 
-  const handleOpenModal = () => {
-    setOpenModal(true);
+  const [drawerState, setDrawerState] = useState(false);
+  const toggleDrawer = (open) => (event) => {
+    if (
+      event.type === "keydown" &&
+      (event.key === "Tab" || event.key === "Shift")
+    ) {
+      return;
+    }
+
+    setDrawerState(!drawerState);
   };
 
   const handleOpenMenssage = (textAlert, typeAlert, closeModal) => {
     setOpenMenssage(true);
     setAlertConfig({ textAlert, typeAlert });
-    if (closeModal) setOpenModal(false);
+    // if (closeModal) setOpenModal(false);
   };
 
   const handleCloseMessage = () => {
     setOpenMenssage(false);
-  };
-  const handleCloseModal = () => {
-    setOpenModal(false);
   };
 
   return (
@@ -98,29 +88,24 @@ const PageEphemeris = () => {
         justifyContent="flex-end"
         alignItems="center"
       >
-        <Button variant="outlined" onClick={handleOpenModal}>
+         <Button variant="outlined" onClick={() => setDrawerState(true)}>
           Cadastrar
         </Button>
 
-        <Modal
-          open={openModal}
-          onClose={handleCloseModal}
-          aria-labelledby="parent-modal-title"
-          aria-describedby="parent-modal-description"
-          ref={{}}
-        >
+        <Drawer anchor="right" open={drawerState} onClose={toggleDrawer(false)}>
           <Box
-            sx={{ ...style, "& > :not(style)": { mb: 6, width: "100%" } }}
+            sx={{ mb: 6, width: "80vw", padding: "60px 0 0" }}
             noValidate
             autoComplete="off"
           >
             <FormEphemeris
               handleList={handleGetRows}
+              handleClose={toggleDrawer(false)}
               OpenAlertMensage={handleOpenMenssage}
               handlePost={serviceEphemeris.postItem}
             />
           </Box>
-        </Modal>
+        </Drawer>
       </Stack>
 
       <Box sx={{ mt: 5 }}>

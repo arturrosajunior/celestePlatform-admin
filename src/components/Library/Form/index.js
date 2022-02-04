@@ -72,7 +72,6 @@ const FormLibrary = (props) => {
             <Grid item md={4}>
               <TextField
                 name="news_publication_date"
-                label="Data"
                 type="date"
                 value={formik.news_publication_date}
                 onChange={formik.handleChange}
