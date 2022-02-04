@@ -112,6 +112,7 @@ const PageLibrary = () => {
             handleList={handleGetRows}
             handleClose={toggleDrawer(false)}
             OpenAlertMensage={handleOpenMenssage}
+            handlePost={serviceLibrary.postItem}
           />
         </Box>
       </Drawer>

@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import API from "services/api";
 
 import { Grid } from "@mui/material";
 import TextField from "@mui/material/TextField";
@@ -48,13 +47,12 @@ const FormLibrary = (props) => {
   async function sendPostLibrary(values) {
     try {
       setLoading(true);
-      API.post("library_item/", values).then((response) => {
-        if (response.data.success) {
-          setLoading(!response.data.success);
-          props.handleList();
-          props.OpenAlertMensage("Library save", "success", true);
-        }
-      });
+      const res = await props.handlePost(values);
+      if (res) {
+        setLoading(!res);
+        await props.handleList();
+        props.OpenAlertMensage("Library save", "success", true);
+      }
     } catch (err) {
       props.OpenAlertMensage(
         "Algo deu errado, tente novamente.",
