@@ -24,7 +24,7 @@ import ListItemText from "@mui/material/ListItemText";
 import FeedTwoToneIcon from "@mui/icons-material/FeedTwoTone";
 import GridViewTwoToneIcon from "@mui/icons-material/GridViewTwoTone";
 import LibraryBooksIcon from "@mui/icons-material/LibraryBooks";
-import EventIcon from '@mui/icons-material/Event';
+import EventIcon from "@mui/icons-material/Event";
 
 const drawerWidth = 240;
 
@@ -175,44 +175,18 @@ export default function MiniDrawer() {
                 <ListItemText primary="Ephemeris" />
               </ListItem>
             </Link>
-
           </List>
         </Drawer>
         <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
           <DrawerHeader />
-
           <Switch>
-            <Route path="/ephemeris">
-              <Ephemeris />
-            </Route>
-            <Route path="/news">
-              <News />
-            </Route>
-            <Route path="/library">
-              <Library />
-            </Route>
-            <Route path="/">
-              <Dashboard />
-            </Route>
+            <Route path="/ephemeris" component={PageEphemeris} />
+            <Route path="/news" component={PageNews} />
+            <Route path="/library" component={PageLibrary} />
+            <Route path="/" component={PageDashboard} />
           </Switch>
         </Box>
       </Router>
     </Box>
   );
-}
-
-function Dashboard() {
-  return <PageDashboard />;
-}
-
-function News() {
-  return <PageNews />;
-}
-
-function Library() {
-  return <PageLibrary />;
-}
-
-function Ephemeris() {
-  return <PageEphemeris />;
 }

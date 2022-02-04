@@ -1,13 +1,13 @@
 import React, { useState, useEffect, useCallback } from "react";
 
+import { Stack, Button, Divider, Typography } from "@mui/material";
 import Box from "@mui/material/Box";
 
-import Modal from "@mui/material/Modal";
-import FormLibrary from "components/Library/Form";
-import { Stack, Button, Divider, Typography } from "@mui/material";
+import Drawer from "@mui/material/Drawer";
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
 import ReactLoading from "react-loading";
+import FormLibrary from "components/Library/Form";
 import GridListItens from "components/GridListItens";
 import * as serviceLibrary from "services/serviceLibrary";
 
@@ -47,7 +47,6 @@ const Alert = React.forwardRef(function Alert(props, ref) {
  */
 
 const PageLibrary = () => {
-  const [openModal, setOpenModal] = useState(false);
   const [activeLoaging, setActiveLoaging] = useState(true);
   const [openMenssage, setOpenMenssage] = useState(false);
 
@@ -72,7 +71,7 @@ const PageLibrary = () => {
       });
       setRows([...newRow]);
     } else {
-      console.error("error " + result);
+      console.error("error ", result);
     }
     setActiveLoaging(false);
   }, []);
@@ -81,21 +80,24 @@ const PageLibrary = () => {
     setTimeout(() => handleGetRows(), 3000);
   }, [handleGetRows]);
 
-  const handleOpenModal = () => {
-    setOpenModal(true);
+  const [drawerState, setDrawerState] = useState(false);
+  const toggleDrawer = (open) => (event) => {
+    if (
+      event.type === "keydown" &&
+      (event.key === "Tab" || event.key === "Shift")
+    ) {
+      return;
+    }
+
+    setDrawerState(!drawerState);
   };
 
   const handleOpenMenssage = (textAlert, typeAlert, closeModal) => {
     setOpenMenssage(true);
     setAlertConfig({ textAlert, typeAlert });
-    if (closeModal) setOpenModal(false);
   };
-
   const handleCloseMessage = () => {
     setOpenMenssage(false);
-  };
-  const handleCloseModal = () => {
-    setOpenModal(false);
   };
 
   return (
@@ -109,29 +111,24 @@ const PageLibrary = () => {
         justifyContent="flex-end"
         alignItems="center"
       >
-        <Button variant="outlined" onClick={handleOpenModal}>
+        <Button variant="outlined" onClick={() => setDrawerState(true)}>
           Cadastrar library
         </Button>
       </Stack>
 
-      <Modal
-        open={openModal}
-        onClose={handleCloseModal}
-        aria-labelledby="parent-modal-title"
-        aria-describedby="parent-modal-description"
-        ref={{}}
-      >
+      <Drawer anchor="right" open={drawerState} onClose={toggleDrawer(false)}>
         <Box
-          sx={{ ...style, "& > :not(style)": { mb: 6, width: "100%" } }}
+          sx={{ mb: 6, width: "80vw", padding: "60px 0 0" }}
           noValidate
           autoComplete="off"
         >
           <FormLibrary
             handleList={handleGetRows}
+            handleClose={toggleDrawer(false)}
             OpenAlertMensage={handleOpenMenssage}
           />
         </Box>
-      </Modal>
+      </Drawer>
 
       <Box sx={{ mt: 5 }}>
         <Typography variant="h6">Todas as librarys</Typography>
