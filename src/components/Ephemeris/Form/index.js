@@ -9,6 +9,7 @@ import Button from "@mui/material/Button";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
+import MenuItem from "@mui/material/MenuItem";
 
 import { useFormik } from "formik";
 
@@ -23,7 +24,9 @@ const FormEphemeris = (props) => {
     event_description: Yup.string().required("O campo é obrigatório"),
     event_location: Yup.string().required("O campo é obrigatório"),
     event_link: Yup.string().required("O campo é obrigatório"),
-    event_time: Yup.string().required("O campo é obrigatório inserir, ex: 00:00"),
+    event_time: Yup.string().required(
+      "O campo é obrigatório inserir, ex: 00:00"
+    ),
   });
   const formik = useFormik({
     initialValues: {
@@ -35,7 +38,7 @@ const FormEphemeris = (props) => {
       event_location: "",
       event_link: "",
       event_image: "",
-      event_ephemeris: 1,
+      event_ephemeris: "0",
       event_color: "",
       event_status: "",
     },
@@ -47,143 +50,173 @@ const FormEphemeris = (props) => {
 
   const [loading, setLoading] = useState(false);
 
-  async function sendPostEphemeri(values){
-    try {
-      setLoading(true);
-      const res = await props.handlePost(values);
-      if (res) {
-        setLoading(!res);
-        await props.handleList();
-        props.OpenAlertMensage("Ephemeri save", "success", true);
-      }
-    } catch (err) {
+  async function sendPostEphemeri(values) {
+    setLoading(true);
+    const res = await props.handlePost(values);
+    console.log("res", res);
+    if (res) {
+      setLoading(!res);
+      await props.handleList();
+      props.handleClose();
+      props.OpenAlertMensage("Ephemeri save", "success", true);
+    } else {
       props.OpenAlertMensage(
         "Algo deu errado, tente novamente.",
         "error",
         false
       );
     }
-  };
+  }
 
   return (
     <form onSubmit={formik.handleSubmit}>
-    <Card variant="outlined">
-      <CardContent>
-        <Grid container spacing={2} columns={12}>
-          <Grid item md={4}>
-            <TextField
-              name="event_date"
-              type="date"
-              value={formik.event_date}
-              onChange={formik.handleChange}
-              error={
-                formik.touched.event_date &&
-                Boolean(formik.errors.event_date)
-              }
-              helperText={
-                formik.touched.event_date &&
-                formik.errors.event_date
-              }
-              fullWidth
-            />
+      <Card variant="outlined">
+        <CardContent>
+          <Grid container spacing={2} columns={12}>
+            <Grid item md={4}>
+              <TextField
+                name="event_date"
+                type="date"
+                value={formik.event_date}
+                onChange={formik.handleChange}
+                error={
+                  formik.touched.event_date && Boolean(formik.errors.event_date)
+                }
+                helperText={
+                  formik.touched.event_date && formik.errors.event_date
+                }
+                fullWidth
+              />
+            </Grid>
+            <Grid item md={4}>
+              <TextField
+                name="event_time"
+                type="time"
+                value={formik.event_time}
+                onChange={formik.handleChange}
+                error={
+                  formik.touched.event_time && Boolean(formik.errors.event_time)
+                }
+                helperText={
+                  formik.touched.event_time && formik.errors.event_time
+                }
+                fullWidth
+              />
+            </Grid>
+            <Grid item md={4}>
+              <TextField
+                name="event_location"
+                label="Local"
+                type="text"
+                value={formik.event_location}
+                onChange={formik.handleChange}
+                error={
+                  formik.touched.event_location &&
+                  Boolean(formik.errors.event_location)
+                }
+                helperText={
+                  formik.touched.event_location && formik.errors.event_location
+                }
+                fullWidth
+              />
+            </Grid>
+            <Grid item md={4}>
+              <TextField
+                name="event_title"
+                label="Titulo"
+                value={formik.event_title}
+                onChange={formik.handleChange}
+                error={
+                  formik.touched.event_title &&
+                  Boolean(formik.errors.event_title)
+                }
+                helperText={
+                  formik.touched.event_title && formik.errors.event_title
+                }
+                fullWidth
+              />
+            </Grid>
+            <Grid item md={4}>
+              <TextField
+                name="event_link"
+                label="Link"
+                type="url"
+                value={formik.event_link}
+                onChange={formik.handleChange}
+                error={
+                  formik.touched.event_link && Boolean(formik.errors.event_link)
+                }
+                helperText={
+                  formik.touched.event_link && formik.errors.event_link
+                }
+                fullWidth
+              />
+            </Grid>
+            <Grid item md={4}>
+              <TextField
+                name="event_ephemeris"
+                id="event_ephemeris"
+                select
+                label="Evento"
+                value={formik.event_ephemeris}
+                onChange={formik.handleChange}
+                error={
+                  formik.touched.event_ephemeris &&
+                  Boolean(formik.errors.event_ephemeris)
+                }
+                helperText={
+                  formik.touched.event_ephemeris &&
+                  formik.errors.event_ephemeris
+                }
+                fullWidth
+              >
+                <MenuItem value={0}> Celeste </MenuItem>
+                <MenuItem value={1}> User </MenuItem>
+              </TextField>
+            </Grid>
+            <Grid item md={12}>
+              <TextField
+                name="event_description"
+                label="Descrição"
+                value={formik.event_description}
+                onChange={formik.handleChange}
+                error={
+                  formik.touched.event_description &&
+                  Boolean(formik.errors.event_description)
+                }
+                helperText={
+                  formik.touched.event_description &&
+                  formik.errors.event_description
+                }
+                fullWidth
+                multiline
+                minRows={10}
+              />
+            </Grid>
           </Grid>
-          <Grid item md={4}>
-            <TextField
-              name="event_time"
-              type="time"
-              value={formik.event_time}
-              onChange={formik.handleChange}
-              error={
-                formik.touched.event_time && Boolean(formik.errors.event_time)
-              }
-              helperText={formik.touched.event_time && formik.errors.event_time}
-              fullWidth
-            />
-          </Grid>
-          <Grid item md={4}>
-            <TextField
-              name="event_location"
-              label="Local"
-              type="text"
-              value={formik.event_location}
-              onChange={formik.handleChange}
-              error={
-                formik.touched.event_location &&
-                Boolean(formik.errors.event_location)
-              }
-              helperText={
-                formik.touched.event_location && formik.errors.event_location
-              }
-              fullWidth
-            />
-          </Grid>
-          <Grid item md={6}>
-            <TextField
-              name="event_title"
-              label="Titulo"
-              value={formik.event_title}
-              onChange={formik.handleChange}
-              error={
-                formik.touched.event_title &&
-                Boolean(formik.errors.event_title)
-              }
-              helperText={
-                formik.touched.event_title && formik.errors.event_title
-              }
-              fullWidth
-            />
-          </Grid>
-          <Grid item xs={6}>
-            <TextField
-              name="event_link"
-              label="Link"
-              type="url"
-              value={formik.event_link}
-              onChange={formik.handleChange}
-              error={
-                formik.touched.event_link && Boolean(formik.errors.event_link)
-              }
-              helperText={formik.touched.event_link && formik.errors.event_link}
-              fullWidth
-            />
-          </Grid>
-          <Grid item md={12}>
-            <TextField
-              name="event_description"
-              label="Descrição"
-              value={formik.event_description}
-              onChange={formik.handleChange}
-              error={formik.touched.event_description && Boolean(formik.errors.event_description)}
-              helperText={formik.touched.event_description && formik.errors.event_description}
-              fullWidth
-              multiline
-              minRows={10}
-            />
-          </Grid>
-        </Grid>
-      </CardContent>
-      <CardActions>
-        <LoadingButton
-          loadingPosition="start"
-          startIcon={<SaveIcon />}
-          variant="outlined"
-          loading={loading}
-          type="submit"
-          color="primary"
-        >
-          Salvar
-        </LoadingButton>
-        <Button
-          variant="outlined"
-          startIcon={<CloseIcon />}
-          color="error"
-          onClick={props.handleClose}
-        >
-          Fechar
-        </Button>
-      </CardActions>
-    </Card>
-  </form>
+        </CardContent>
+        <CardActions>
+          <LoadingButton
+            loadingPosition="start"
+            startIcon={<SaveIcon />}
+            variant="outlined"
+            loading={loading}
+            type="submit"
+            color="primary"
+          >
+            Salvar
+          </LoadingButton>
+          <Button
+            variant="outlined"
+            startIcon={<CloseIcon />}
+            color="error"
+            onClick={props.handleClose}
+          >
+            Fechar
+          </Button>
+        </CardActions>
+      </Card>
+    </form>
   );
 };
 

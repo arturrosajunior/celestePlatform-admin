@@ -138,7 +138,9 @@ export default function MiniDrawer() {
               )}
             </IconButton>
           </DrawerHeader>
+          
           <Divider />
+
           <List>
             <Link to="/">
               <ListItem button key="Dashboard">

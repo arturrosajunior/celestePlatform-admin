@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import Box from "@mui/material/Box";
 import Drawer from "@mui/material/Drawer";
-import { Stack, Button, Divider, Typography } from "@mui/material";
+import { Stack, Button, Typography } from "@mui/material";
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
 import ReactLoading from "react-loading";
@@ -13,7 +13,7 @@ import * as serviceEphemeris from "services/serviceEphemeris";
 const initialAlert = { textAlert: "", typeAlert: "" };
 const columns = [
   { field: "id", headerName: "id", width: 2 },
-  { field: "event_date", headerName: "Data", width: 20 },
+  { field: "event_date", headerName: "Data", width: 200 },
   { field: "event_title", headerName: "Title", width: 150 },
   { field: "event_description", headerName: "Descrição", width: 280 },
 ];
@@ -46,7 +46,8 @@ const PageEphemeris = () => {
       });
       setRows([...newRow]);
     } else {
-      console.error("error " + result);
+      handleOpenMenssage('Nada encontrado', "warning")
+      setRows([]);
     }
     setActiveLoaging(false);
   }, []);
@@ -57,12 +58,12 @@ const PageEphemeris = () => {
 
   const [drawerState, setDrawerState] = useState(false);
   const toggleDrawer = (open) => (event) => {
-    if (
-      event.type === "keydown" &&
-      (event.key === "Tab" || event.key === "Shift")
-    ) {
-      return;
-    }
+    // if (
+    //   event.type === "keydown" &&
+    //   (event.key === "Tab" || event.key === "Shift")
+    // ) {
+    //   return;
+    // }
 
     setDrawerState(!drawerState);
   };
@@ -83,7 +84,7 @@ const PageEphemeris = () => {
 
       <Stack
         direction="row"
-        divider={<Divider orientation="vertical" flexItem />}
+        // divider={<Divider orientation="vertical" flexItem />}
         spacing={2}
         justifyContent="flex-end"
         alignItems="center"
@@ -116,19 +117,13 @@ const PageEphemeris = () => {
             <ReactLoading type="spinningBubbles" color="#cccccc" />
           </Stack>
         ) : (
-          // <ListEphemeris
-          //   listEphemeris={rows}
-          //   handleList={handleGetRows}
-          //   handleDelete={serviceEphemeris.deleteItem}
-          //   OpenAlertMensage={handleOpenMenssage}
-          // />
-
           <GridListItens
             listRows={rows}
             handleList={handleGetRows}
             handleDelete={serviceEphemeris.deleteItem}
             OpenAlertMensage={handleOpenMenssage}
             columns={columns}
+            openModalUpdate={() => setDrawerState(true)}
           />
         )}
       </Box>

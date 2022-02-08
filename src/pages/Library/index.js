@@ -56,7 +56,8 @@ const PageLibrary = () => {
       });
       setRows([...newRow]);
     } else {
-      console.error("error ", result);
+      handleOpenMenssage('Nada encontrado', "warning")
+      setRows([]);
     }
     setActiveLoaging(false);
   }, []);
@@ -67,17 +68,17 @@ const PageLibrary = () => {
 
   const [drawerState, setDrawerState] = useState(false);
   const toggleDrawer = (open) => (event) => {
-    if (
-      event.type === "keydown" &&
-      (event.key === "Tab" || event.key === "Shift")
-    ) {
-      return;
-    }
+    // if (
+    //   event.type === "keydown" &&
+    //   (event.key === "Tab" || event.key === "Shift")
+    // ) {
+    //   return;
+    // }
 
     setDrawerState(!drawerState);
   };
 
-  const handleOpenMenssage = (textAlert, typeAlert, closeModal) => {
+  const handleOpenMenssage = (textAlert, typeAlert) => {
     setOpenMenssage(true);
     setAlertConfig({ textAlert, typeAlert });
   };

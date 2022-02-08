@@ -45,15 +45,14 @@ const FormLibrary = (props) => {
   const [loading, setLoading] = useState(false);
 
   async function sendPostLibrary(values) {
-    try {
-      setLoading(true);
-      const res = await props.handlePost(values);
-      if (res) {
-        setLoading(!res);
-        await props.handleList();
-        props.OpenAlertMensage("Library save", "success", true);
-      }
-    } catch (err) {
+    setLoading(true);
+    const res = await props.handlePost(values);
+    if (res) {
+      setLoading(!res);
+      await props.handleList();
+      props.OpenAlertMensage("Library save", "success", true);
+      props.handleClose();
+    } else {
       props.OpenAlertMensage(
         "Algo deu errado, tente novamente.",
         "error",
@@ -102,7 +101,6 @@ const FormLibrary = (props) => {
               <TextField
                 name="news_reference"
                 label="Referência"
-                type="url"
                 value={formik.news_reference}
                 onChange={formik.handleChange}
                 error={

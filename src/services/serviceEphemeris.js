@@ -1,9 +1,9 @@
 import API from "services/api";
 
-
+const endpoint = 'calendar_event/';
 
 export const getAllItems = () => {
-  const res = API.get("calendar_events")
+  const res = API.get(`${endpoint}all`)
     .then((response) => {
       return response.data;
     })
@@ -14,14 +14,14 @@ export const getAllItems = () => {
 };
 
 export const postItem = (values) => {
-  const res = API.post("calendar_event/", values).then((response) => {
+  const res = API.post(`${endpoint}`, values).then((response) => {
     return true;
   });
   return res;
 };
 
 export const deleteItem = (id) => {
-  const res = API.delete("calendar_event/" + id).then((res) => {
+  const res = API.delete(`${endpoint}${id}`).then((res) => {
     return true;
   });
   return res;
