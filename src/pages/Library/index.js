@@ -7,9 +7,10 @@ import Drawer from "@mui/material/Drawer";
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
 import ReactLoading from "react-loading";
-import FormLibrary from "components/Library/Form";
+import FormLibrary from "pages/Library/Form";
 import GridListItens from "components/GridListItens";
 import * as serviceLibrary from "services/serviceLibrary";
+import * as moment from "moment";
 
 const initialAlert = { textAlert: "", typeAlert: "" };
 const columns = [
@@ -34,9 +35,9 @@ const Alert = React.forwardRef(function Alert(props, ref) {
 const PageLibrary = () => {
   const [activeLoaging, setActiveLoaging] = useState(true);
   const [openMenssage, setOpenMenssage] = useState(false);
-
   const [rows, setRows] = useState([]);
   const [alertConfig, setAlertConfig] = useState(initialAlert);
+  const [selectRow, setSelectRow] = useState();
 
   // eslint-disable-next-line
   const handleGetRows = useCallback(async () => {
@@ -48,7 +49,7 @@ const PageLibrary = () => {
           content: item.content,
           news_content: item.news_content,
           keywords: item.keywords,
-          news_publication_date: item.news_publication_date,
+          news_publication_date: moment(item.news_publication_date).format('YYYY-MM-DD'),
           news_link: item.news_link,
           news_reference: item.news_reference,
           news_source: item.news_source,
@@ -114,6 +115,9 @@ const PageLibrary = () => {
             handleClose={toggleDrawer(false)}
             OpenAlertMensage={handleOpenMenssage}
             handlePost={serviceLibrary.postItem}
+            handlePut={serviceLibrary.putItem}
+            valuesRowOnSelected={selectRow}
+            setValuesRowOnSelected={setSelectRow}
           />
         </Box>
       </Drawer>
@@ -132,6 +136,8 @@ const PageLibrary = () => {
             handleDelete={serviceLibrary.deleteItem}
             OpenAlertMensage={handleOpenMenssage}
             columns={columns}
+            openModalUpdate={() => setDrawerState(true)}
+            handleSetSelectRow={setSelectRow}
           />
         )}
       </Box>

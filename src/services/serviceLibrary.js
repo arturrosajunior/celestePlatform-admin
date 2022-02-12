@@ -26,3 +26,11 @@ export const deleteItem = (id) => {
   });
   return res;
 };
+
+
+export const putItem = (id, values) => {
+  const res = API.put(`${endpoint}${id}`, values).then((res) => {
+    return true;
+  });
+  return res;
+};

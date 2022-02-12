@@ -15,6 +15,8 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 
 const FormLibrary = (props) => {
+  const [loading, setLoading] = useState(false);
+
   const validationSchema = Yup.object().shape({
     news_publication_date: Yup.date().required("O campo é obrigatório"),
     content: Yup.string()
@@ -26,31 +28,46 @@ const FormLibrary = (props) => {
     news_reference: Yup.string().required("O campo é obrigatório"),
     news_source: Yup.string().required("O campo é obrigatório"),
   });
+  
+  const defaultValues = {
+    content: "",
+    keywords: "",
+    news_content: "",
+    news_source: "",
+    news_reference: "",
+    news_publication_date: "",
+    news_link: ""
+  };
+
+  const [initialValues, setInitialValues] = useState(
+    props.valuesRowOnSelected ? props.valuesRowOnSelected[0] : defaultValues
+  );
+
+  const closeModalUnsetValeus = () => {
+    setInitialValues(defaultValues);
+
+    props.setValuesRowOnSelected();
+    props.handleClose();
+  };
+
   const formik = useFormik({
-    initialValues: {
-      news_publication_date: "",
-      content: "",
-      news_content: "",
-      keywords: "",
-      news_link: "",
-      news_reference: "",
-      news_source: "",
-    },
+    initialValues,
     onSubmit: (values) => {
       sendPostLibrary(values);
     },
     validationSchema: validationSchema,
   });
 
-  const [loading, setLoading] = useState(false);
-
   async function sendPostLibrary(values) {
     setLoading(true);
-    const res = await props.handlePost(values);
+    const res = props.valuesRowOnSelected
+      ? await props.handlePut(props.valuesRowOnSelected[0].id, values)
+      : await props.handlePost(values);
     if (res) {
       setLoading(!res);
       await props.handleList();
       props.OpenAlertMensage("Library save", "success", true);
+      closeModalUnsetValeus();
       props.handleClose();
     } else {
       props.OpenAlertMensage(
@@ -70,6 +87,7 @@ const FormLibrary = (props) => {
               <TextField
                 name="news_publication_date"
                 type="date"
+                defaultValue={formik.initialValues.news_publication_date}
                 value={formik.news_publication_date}
                 onChange={formik.handleChange}
                 error={
@@ -88,6 +106,7 @@ const FormLibrary = (props) => {
                 name="news_link"
                 label="Link"
                 type="url"
+                defaultValue={formik.initialValues.news_link}
                 value={formik.news_link}
                 onChange={formik.handleChange}
                 error={
@@ -101,6 +120,7 @@ const FormLibrary = (props) => {
               <TextField
                 name="news_reference"
                 label="Referência"
+                defaultValue={formik.initialValues.news_reference}
                 value={formik.news_reference}
                 onChange={formik.handleChange}
                 error={
@@ -117,6 +137,7 @@ const FormLibrary = (props) => {
               <TextField
                 name="news_source"
                 label="Fonte"
+                defaultValue={formik.initialValues.news_source}
                 value={formik.news_source}
                 onChange={formik.handleChange}
                 error={
@@ -133,6 +154,7 @@ const FormLibrary = (props) => {
               <TextField
                 name="keywords"
                 label="Keywords"
+                defaultValue={formik.initialValues.keywords}
                 value={formik.keywords}
                 onChange={formik.handleChange}
                 error={
@@ -146,6 +168,7 @@ const FormLibrary = (props) => {
               <TextField
                 name="content"
                 label="Texto Editado"
+                defaultValue={formik.initialValues.content}
                 value={formik.content}
                 onChange={formik.handleChange}
                 error={formik.touched.content && Boolean(formik.errors.content)}
@@ -159,6 +182,7 @@ const FormLibrary = (props) => {
               <TextField
                 name="news_content"
                 label="Texto Original"
+                defaultValue={formik.initialValues.news_content}
                 value={formik.news_content}
                 onChange={formik.handleChange}
                 error={
@@ -190,7 +214,7 @@ const FormLibrary = (props) => {
             variant="outlined"
             startIcon={<CloseIcon />}
             color="error"
-            onClick={props.handleClose}
+            onClick={closeModalUnsetValeus}
           >
             Fechar
           </Button>

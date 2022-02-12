@@ -19,7 +19,6 @@ import Stack from "@mui/material/Stack";
 
 const GridListItens = (props) => {
   const [open, setOpenModal] = useState(false);
-  const [content, setContent] = useState("");
   const [idPost, setidPost] = useState("");
 
   const handleCloseModal = () => {
@@ -28,18 +27,25 @@ const GridListItens = (props) => {
 
   const noDelete = () => {
     props.OpenAlertMensage(
-      "Cuidado, você está tentando deletar!",
+      "Cuidado, você pode deletar sem querer!",
       "warning",
       true
     );
+    props.handleSetSelectRow([]);
+    setidPost("");
     handleCloseModal();
+  };
+
+  const editRow = () => {
+    handleCloseModal();
+    props.openModalUpdate(true);
   };
 
   const deleteApi = async () => {
     const res = await props.handleDelete(idPost);
     if (res) {
       await props.handleList();
-      props.OpenAlertMensage("Ephemeris Delete", "success", true);
+      props.OpenAlertMensage("Deletado da lista", "success", true);
     } else {
       console.error("ops! ocorreu um erro" + res);
     }
@@ -55,8 +61,13 @@ const GridListItens = (props) => {
           checkboxSelection={false}
           pageSize={10}
           onSelectionModelChange={(ids) => {
-            setContent(ids.toString());
             setidPost(ids.toString());
+            const selectedRows = props.listRows.filter(
+              (row) => ids.toString() == row.id
+            );
+            console.log("selectedRows", selectedRows);
+            props.handleSetSelectRow(selectedRows);
+
             setOpenModal(true);
           }}
           components={{
@@ -86,11 +97,12 @@ const GridListItens = (props) => {
           <DialogTitle id="alert-dialog-title">Deseja excluir?</DialogTitle>
           <DialogContent>
             <DialogContentText id="alert-dialog-description">
-              {content.id}
+              POST: {idPost}
             </DialogContentText>
           </DialogContent>
           <DialogActions>
-            <Button onClick={noDelete}>Não</Button>
+            <Button onClick={noDelete}>Fazer nada</Button>
+            <Button onClick={editRow}>Editar</Button>
             <Button onClick={deleteApi}>Apargar</Button>
           </DialogActions>
         </Dialog>

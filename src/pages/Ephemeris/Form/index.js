@@ -16,6 +16,8 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 
 const FormEphemeris = (props) => {
+  const [loading, setLoading] = useState(false);
+
   const validationSchema = Yup.object().shape({
     event_date: Yup.date().required("O campo é obrigatório, 00/00/0000"),
     event_title: Yup.string()
@@ -28,36 +30,50 @@ const FormEphemeris = (props) => {
       "O campo é obrigatório inserir, ex: 00:00"
     ),
   });
+
+  const defaultValues = {
+    user_id: 0,
+    event_date: "",
+    event_time: "",
+    event_title: "",
+    event_description: "",
+    event_location: "",
+    event_link: "",
+    event_image: "",
+    event_ephemeris: "0",
+    event_color: "",
+    event_status: "",
+  };
+
+  const [initialValues, setInitialValues] = useState(
+    props.valuesRowOnSelected ? props.valuesRowOnSelected[0] : defaultValues
+  );
+
+  const closeModalUnsetValeus = () => {
+    setInitialValues(defaultValues);
+
+    props.setValuesRowOnSelected();
+    props.handleClose();
+  };
+
   const formik = useFormik({
-    initialValues: {
-      user_id: 0,
-      event_date: "",
-      event_time: "",
-      event_title: "",
-      event_description: "",
-      event_location: "",
-      event_link: "",
-      event_image: "",
-      event_ephemeris: "0",
-      event_color: "",
-      event_status: "",
-    },
+    initialValues,
     onSubmit: (values) => {
       sendPostEphemeri(values);
     },
     validationSchema: validationSchema,
   });
 
-  const [loading, setLoading] = useState(false);
-
+  // colocar o if para poder faze o put ou o post
   async function sendPostEphemeri(values) {
     setLoading(true);
-    const res = await props.handlePost(values);
-    console.log("res", res);
+    const res = props.valuesRowOnSelected
+      ? await props.handlePut(props.valuesRowOnSelected[0].id, values)
+      : await props.handlePost(values);
     if (res) {
       setLoading(!res);
       await props.handleList();
-      props.handleClose();
+      closeModalUnsetValeus();
       props.OpenAlertMensage("Ephemeri save", "success", true);
     } else {
       props.OpenAlertMensage(
@@ -77,6 +93,7 @@ const FormEphemeris = (props) => {
               <TextField
                 name="event_date"
                 type="date"
+                defaultValue={formik.initialValues.event_date}
                 value={formik.event_date}
                 onChange={formik.handleChange}
                 error={
@@ -92,6 +109,7 @@ const FormEphemeris = (props) => {
               <TextField
                 name="event_time"
                 type="time"
+                defaultValue={formik.initialValues.event_time}
                 value={formik.event_time}
                 onChange={formik.handleChange}
                 error={
@@ -107,7 +125,7 @@ const FormEphemeris = (props) => {
               <TextField
                 name="event_location"
                 label="Local"
-                type="text"
+                defaultValue={formik.initialValues.event_location}
                 value={formik.event_location}
                 onChange={formik.handleChange}
                 error={
@@ -124,6 +142,7 @@ const FormEphemeris = (props) => {
               <TextField
                 name="event_title"
                 label="Titulo"
+                defaultValue={formik.initialValues.event_title}
                 value={formik.event_title}
                 onChange={formik.handleChange}
                 error={
@@ -141,6 +160,7 @@ const FormEphemeris = (props) => {
                 name="event_link"
                 label="Link"
                 type="url"
+                defaultValue={formik.initialValues.event_link}
                 value={formik.event_link}
                 onChange={formik.handleChange}
                 error={
@@ -158,6 +178,7 @@ const FormEphemeris = (props) => {
                 id="event_ephemeris"
                 select
                 label="Evento"
+                defaultValue={formik.initialValues.event_ephemeris}
                 value={formik.event_ephemeris}
                 onChange={formik.handleChange}
                 error={
@@ -178,6 +199,7 @@ const FormEphemeris = (props) => {
               <TextField
                 name="event_description"
                 label="Descrição"
+                defaultValue={formik.initialValues.event_description}
                 value={formik.event_description}
                 onChange={formik.handleChange}
                 error={
@@ -210,7 +232,7 @@ const FormEphemeris = (props) => {
             variant="outlined"
             startIcon={<CloseIcon />}
             color="error"
-            onClick={props.handleClose}
+            onClick={closeModalUnsetValeus}
           >
             Fechar
           </Button>

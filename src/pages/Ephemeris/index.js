@@ -6,7 +6,8 @@ import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
 import ReactLoading from "react-loading";
 import GridListItens from "components/GridListItens";
-import FormEphemeris from "components/Ephemeris/Form";
+import FormEphemeris from "pages/Ephemeris/Form";
+import * as moment from "moment";
 
 import * as serviceEphemeris from "services/serviceEphemeris";
 
@@ -31,6 +32,7 @@ const PageEphemeris = () => {
   const [openMenssage, setOpenMenssage] = useState(false);
   const [rows, setRows] = useState([]);
   const [alertConfig, setAlertConfig] = useState(initialAlert);
+  const [selectRow, setSelectRow] = useState();
 
   // eslint-disable-next-line
   const handleGetRows = useCallback(async () => {
@@ -41,12 +43,19 @@ const PageEphemeris = () => {
           id: item.id,
           event_title: item.event_title,
           event_description: item.event_description,
-          event_date: item.event_date,
+          event_date: moment(item.event_date).format('YYYY-MM-DD'),
+          event_time: item.event_time,
+          event_location: item.event_location,
+          event_link: item.event_link,
+          event_image: item.event_image,
+          event_ephemeris: item.event_ephemeris,
+          event_color: item.event_color,
+          event_status: item.event_status,
         };
       });
       setRows([...newRow]);
     } else {
-      handleOpenMenssage('Nada encontrado', "warning")
+      handleOpenMenssage("Nada encontrado", "warning");
       setRows([]);
     }
     setActiveLoaging(false);
@@ -68,7 +77,7 @@ const PageEphemeris = () => {
     setDrawerState(!drawerState);
   };
 
-  const handleOpenMenssage = (textAlert, typeAlert, closeModal) => {
+  const handleOpenMenssage = (textAlert, typeAlert) => {
     setOpenMenssage(true);
     setAlertConfig({ textAlert, typeAlert });
     // if (closeModal) setOpenModal(false);
@@ -89,7 +98,7 @@ const PageEphemeris = () => {
         justifyContent="flex-end"
         alignItems="center"
       >
-         <Button variant="outlined" onClick={() => setDrawerState(true)}>
+        <Button variant="outlined" onClick={() => setDrawerState(true)}>
           Cadastrar
         </Button>
 
@@ -104,6 +113,9 @@ const PageEphemeris = () => {
               handleClose={toggleDrawer(false)}
               OpenAlertMensage={handleOpenMenssage}
               handlePost={serviceEphemeris.postItem}
+              handlePut={serviceEphemeris.putItem}
+              valuesRowOnSelected={selectRow}
+              setValuesRowOnSelected={setSelectRow}
             />
           </Box>
         </Drawer>
@@ -124,6 +136,7 @@ const PageEphemeris = () => {
             OpenAlertMensage={handleOpenMenssage}
             columns={columns}
             openModalUpdate={() => setDrawerState(true)}
+            handleSetSelectRow={setSelectRow}
           />
         )}
       </Box>
