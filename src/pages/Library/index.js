@@ -42,6 +42,7 @@ const PageLibrary = () => {
   // eslint-disable-next-line
   const handleGetRows = useCallback(async () => {
     const result = await serviceLibrary.getAllItems();
+    console.log(result.data.length);
     if (result.success) {
       const newRow = result.data.map((item) => {
         return {
@@ -49,7 +50,7 @@ const PageLibrary = () => {
           content: item.content,
           news_content: item.news_content,
           keywords: item.keywords,
-          news_publication_date: moment(item.news_publication_date).format('YYYY-MM-DD'),
+          news_publication_date: moment(item.news_publication_date).utc().format('YYYY-MM-DD'),
           news_link: item.news_link,
           news_reference: item.news_reference,
           news_source: item.news_source,

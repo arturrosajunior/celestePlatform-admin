@@ -43,7 +43,7 @@ const PageEphemeris = () => {
           id: item.id,
           event_title: item.event_title,
           event_description: item.event_description,
-          event_date: moment(item.event_date).format('YYYY-MM-DD'),
+          event_date: moment(item.event_date).utc().format('YYYY-MM-DD'),
           event_time: item.event_time,
           event_location: item.event_location,
           event_link: item.event_link,

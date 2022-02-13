@@ -138,7 +138,7 @@ export default function MiniDrawer() {
               )}
             </IconButton>
           </DrawerHeader>
-          
+
           <Divider />
 
           <List>
@@ -160,15 +160,6 @@ export default function MiniDrawer() {
               </ListItem>
             </Link>
 
-            <Link to="/news">
-              <ListItem button key="News">
-                <ListItemIcon>
-                  <FeedTwoToneIcon />
-                </ListItemIcon>
-                <ListItemText primary="News" />
-              </ListItem>
-            </Link>
-
             <Link to="/ephemeris">
               <ListItem button key="Ephemeris">
                 <ListItemIcon>
@@ -177,6 +168,16 @@ export default function MiniDrawer() {
                 <ListItemText primary="Ephemeris" />
               </ListItem>
             </Link>
+
+            <Link to="/news">
+              <ListItem button key="News">
+                <ListItemIcon>
+                  <FeedTwoToneIcon />
+                </ListItemIcon>
+                <ListItemText primary="News" />
+              </ListItem>
+            </Link>
+            
           </List>
         </Drawer>
         <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
