@@ -63,7 +63,7 @@ const GridListItens = (props) => {
           onSelectionModelChange={(ids) => {
             setidPost(ids.toString());
             const selectedRows = props.listRows.filter(
-              (row) => ids.toString() == row.id
+              (row) => ids.toString() === ""+row.id
             );
             console.log("selectedRows", selectedRows);
             props.handleSetSelectRow(selectedRows);
