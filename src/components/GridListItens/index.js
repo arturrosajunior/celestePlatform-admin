@@ -103,7 +103,7 @@ const GridListItens = (props) => {
           <DialogActions>
             <Button onClick={noDelete}>Fazer nada</Button>
             <Button onClick={editRow}>Editar</Button>
-            <Button onClick={deleteApi}>Apargar</Button>
+            <Button onClick={deleteApi}>Deletar</Button>
           </DialogActions>
         </Dialog>
       </div>
