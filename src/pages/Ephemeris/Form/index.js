@@ -21,8 +21,7 @@ const FormEphemeris = (props) => {
   const validationSchema = Yup.object().shape({
     event_date: Yup.date().required("O campo é obrigatório, 00/00/0000"),
     event_title: Yup.string()
-      .required("O campo é obrigatório")
-      .min(10, "Digite no mínimo 10 caracteres"),
+      .required("O campo é obrigatório"),
     event_description: Yup.string().required("O campo é obrigatório"),
     event_location: Yup.string().required("O campo é obrigatório"),
     event_link: Yup.string().required("O campo é obrigatório"),
