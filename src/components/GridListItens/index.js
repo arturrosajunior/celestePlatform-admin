@@ -31,7 +31,7 @@ const GridListItens = (props) => {
       "warning",
       true
     );
-    props.handleSetSelectRow([]);
+    props.handleSetSelectRow('');
     setidPost("");
     handleCloseModal();
   };
