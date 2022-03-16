@@ -12,7 +12,6 @@ import CardContent from "@mui/material/CardContent";
 import { useFormik } from "formik";
 
 import * as Yup from "yup";
-const initialAlert = { textAlert: "", typeAlert: "" };
 
 const FormCategory = (props) => {
   const [loading, setLoading] = useState(false);
