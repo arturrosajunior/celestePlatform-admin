@@ -28,7 +28,7 @@ const FormLibrary = (props) => {
     news_reference: Yup.string().required("O campo é obrigatório"),
     news_source: Yup.string().required("O campo é obrigatório"),
   });
-  
+
   const defaultValues = {
     content: "",
     keywords: "",
@@ -36,7 +36,8 @@ const FormLibrary = (props) => {
     news_source: "",
     news_reference: "",
     news_publication_date: "",
-    news_link: ""
+    news_link: "",
+    admin_id: 1,
   };
 
   const [initialValues, setInitialValues] = useState(
@@ -80,6 +81,13 @@ const FormLibrary = (props) => {
 
   return (
     <form onSubmit={formik.handleSubmit}>
+      <TextField
+        sx={{ display: 'none'}}
+        name="admin_id"
+        type="text"
+        defaultValue={formik.initialValues.admin_id}
+        value={formik.admin_id}
+      />
       <Card variant="outlined">
         <CardContent>
           <Grid container spacing={2} columns={12}>

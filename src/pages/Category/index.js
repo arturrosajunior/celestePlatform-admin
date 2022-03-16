@@ -1,22 +1,25 @@
 import React, { useState, useEffect, useCallback } from "react";
+
+import { Stack, Button, Divider, Typography } from "@mui/material";
 import Box from "@mui/material/Box";
+
 import Drawer from "@mui/material/Drawer";
-import { Stack, Button, Typography } from "@mui/material";
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
 import ReactLoading from "react-loading";
+import FormCategory from "pages/Category/Form";
 import GridListItens from "components/GridListItens";
-import FormEphemeris from "pages/Ephemeris/Form";
-import * as moment from "moment";
 import * as serviceCategory from "services/serviceCategory";
-import * as serviceEphemeris from "services/serviceEphemeris";
+import * as moment from "moment";
 
 const initialAlert = { textAlert: "", typeAlert: "" };
 const columns = [
   { field: "id", headerName: "id", width: 2 },
-  { field: "event_date", headerName: "Data", width: 200 },
-  { field: "event_title", headerName: "Title", width: 150 },
-  { field: "event_description", headerName: "Descrição", width: 280 },
+  { field: "title", headerName: "Titulo", width: 280 },
+  { field: "parent_id", headerName: "parent_id", width: 2 },
+  { field: "user_id", headerName: "user_id", width: 2 },
+  { field: "date_created", headerName: "Data Created", width: 150 },
+  { field: "date_updated", headerName: "Data Update", width: 150 },
 ];
 
 const Alert = React.forwardRef(function Alert(props, ref) {
@@ -27,63 +30,38 @@ const Alert = React.forwardRef(function Alert(props, ref) {
  * Function that returns a grid with API information
  */
 
-const PageEphemeris = () => {
+const PageCategory = () => {
   const [activeLoaging, setActiveLoaging] = useState(true);
   const [openMenssage, setOpenMenssage] = useState(false);
   const [rows, setRows] = useState([]);
   const [alertConfig, setAlertConfig] = useState(initialAlert);
   const [selectRow, setSelectRow] = useState();
-  const [categories, setCategories] = useState([]);
 
   // eslint-disable-next-line
   const handleGetRows = useCallback(async () => {
-    const result = await serviceEphemeris.getAllItems();
+    const result = await serviceCategory.getAllItems();
     if (result.success) {
       const newRow = result.data.map((item) => {
         return {
           id: item.id,
-          event_title: item.event_title,
-          event_description: item.event_description,
-          event_date: moment(item.event_date).utc().format("YYYY-MM-DD"),
-          event_time: item.event_time,
-          event_location: item.event_location,
-          event_link: item.event_link,
-          event_image: item.event_image,
-          event_ephemeris: item.event_ephemeris,
-          event_color: item.event_color,
-          event_status: item.event_status,
-          event_categories: item.event_categories
+          title: item.title,
+          parent_id: item.parent_id,
+          user_id: item.user_id,
+          date_created: moment(item.date_created).utc().format('YYYY-MM-DD'),
+          date_updated: moment(item.date_updated).utc().format('YYYY-MM-DD'),
         };
       });
       setRows([...newRow]);
     } else {
-      handleOpenMenssage("Nada encontrado", "warning");
+      handleOpenMenssage('Nada encontrado', "warning")
       setRows([]);
     }
     setActiveLoaging(false);
   }, []);
 
-  const handleGetCategories = useCallback(async () => {
-    const result = await serviceCategory.getAllItems();
-    if (result.success) {
-      const newCategory = result.data.map((item) => {
-        return {
-          id: item.id,
-          title: item.title,
-        };
-      });
-      setCategories([...newCategory]);
-    } else {
-      setCategories([]);
-    }
-  }, []);
-
   useEffect(() => {
-    setTimeout(() => {
-      handleGetRows();
-      handleGetCategories();
-    }, 3000);
-  }, [handleGetRows, handleGetCategories]);
+    setTimeout(() => handleGetRows(), 3000);
+  }, [handleGetRows]);
 
   const [drawerState, setDrawerState] = useState(false);
   const toggleDrawer = (open) => (event) => {
@@ -100,7 +78,6 @@ const PageEphemeris = () => {
   const handleOpenMenssage = (textAlert, typeAlert) => {
     setOpenMenssage(true);
     setAlertConfig({ textAlert, typeAlert });
-    // if (closeModal) setOpenModal(false);
   };
 
   const handleCloseMessage = () => {
@@ -109,11 +86,11 @@ const PageEphemeris = () => {
 
   return (
     <div>
-      <h1>Ephemeris</h1>
+      <h1>Categorias</h1>
 
       <Stack
         direction="row"
-        // divider={<Divider orientation="vertical" flexItem />}
+        divider={<Divider orientation="vertical" flexItem />}
         spacing={2}
         justifyContent="flex-end"
         alignItems="center"
@@ -121,29 +98,28 @@ const PageEphemeris = () => {
         <Button variant="outlined" onClick={() => setDrawerState(true)}>
           Cadastrar
         </Button>
-
-        <Drawer anchor="right" open={drawerState} onClose={toggleDrawer(false)}>
-          <Box
-            sx={{ mb: 6, width: "80vw", padding: "60px 0 0" }}
-            noValidate
-            autoComplete="off"
-          >
-            <FormEphemeris
-              handleList={handleGetRows}
-              handleClose={toggleDrawer(false)}
-              OpenAlertMensage={handleOpenMenssage}
-              handlePost={serviceEphemeris.postItem}
-              handlePut={serviceEphemeris.putItem}
-              setValuesRowOnSelected={setSelectRow}
-              valuesRowOnSelected={selectRow}
-              categories={categories}
-            />
-          </Box>
-        </Drawer>
       </Stack>
 
+      <Drawer anchor="right" open={drawerState} onClose={toggleDrawer(false)}>
+        <Box
+          sx={{ mb: 6, width: "80vw", padding: "60px 0 0" }}
+          noValidate
+          autoComplete="off"
+        >
+          <FormCategory
+            handleList={handleGetRows}
+            handleClose={toggleDrawer(false)}
+            OpenAlertMensage={handleOpenMenssage}
+            handlePost={serviceCategory.postItem}
+            handlePut={serviceCategory.putItem}
+            valuesRowOnSelected={selectRow}
+            setValuesRowOnSelected={setSelectRow}
+          />
+        </Box>
+      </Drawer>
+
       <Box sx={{ mt: 5 }}>
-        <Typography variant="h6">Todas as datas</Typography>
+        <Typography variant="h6">Todas as categorias</Typography>
 
         {activeLoaging ? (
           <Stack height="100%" alignItems="center" justifyContent="center">
@@ -153,7 +129,7 @@ const PageEphemeris = () => {
           <GridListItens
             listRows={rows}
             handleList={handleGetRows}
-            handleDelete={serviceEphemeris.deleteItem}
+            handleDelete={serviceCategory.deleteItem}
             OpenAlertMensage={handleOpenMenssage}
             columns={columns}
             openModalUpdate={() => setDrawerState(true)}
@@ -180,4 +156,4 @@ const PageEphemeris = () => {
   );
 };
 
-export default PageEphemeris;
+export default PageCategory;

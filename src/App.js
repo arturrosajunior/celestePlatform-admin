@@ -25,6 +25,9 @@ import FeedTwoToneIcon from "@mui/icons-material/FeedTwoTone";
 import GridViewTwoToneIcon from "@mui/icons-material/GridViewTwoTone";
 import LibraryBooksIcon from "@mui/icons-material/LibraryBooks";
 import EventIcon from "@mui/icons-material/Event";
+import CategoryIcon from '@mui/icons-material/Category';
+import PageCategory from "pages/Category";
+
 
 const drawerWidth = 240;
 
@@ -150,6 +153,15 @@ export default function MiniDrawer() {
                 <ListItemText primary="Dashboard" />
               </ListItem>
             </Link>
+                        
+            <Link to="/category">
+              <ListItem button key="Category">
+                <ListItemIcon>
+                  <CategoryIcon />
+                </ListItemIcon>
+                <ListItemText primary="Category" />
+              </ListItem>
+            </Link>
 
             <Link to="/library">
               <ListItem button key="Library">
@@ -183,6 +195,7 @@ export default function MiniDrawer() {
         <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
           <DrawerHeader />
           <Switch>
+            <Route path="/category" component={PageCategory} />
             <Route path="/ephemeris" component={PageEphemeris} />
             <Route path="/news" component={PageNews} />
             <Route path="/library" component={PageLibrary} />
