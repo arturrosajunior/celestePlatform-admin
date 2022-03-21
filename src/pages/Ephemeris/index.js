@@ -4,12 +4,18 @@ import Drawer from "@mui/material/Drawer";
 import { Stack, Button, Typography } from "@mui/material";
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Divider from '@mui/material/Divider';
 import ReactLoading from "react-loading";
 import GridListItens from "components/GridListItens";
 import FormEphemeris from "pages/Ephemeris/Form";
+import Switch from "@mui/material/Switch";
 import * as moment from "moment";
 import * as serviceCategory from "services/serviceCategory";
 import * as serviceEphemeris from "services/serviceEphemeris";
+import Kalend, { CalendarView } from "kalend";
+import "kalend/dist/styles/index.css";
+import { StyledKalend } from "./style";
 
 const initialAlert = { textAlert: "", typeAlert: "" };
 const columns = [
@@ -29,11 +35,14 @@ const Alert = React.forwardRef(function Alert(props, ref) {
 
 const PageEphemeris = () => {
   const [activeLoaging, setActiveLoaging] = useState(true);
+  const [viewCalendar, setViewCalendar] = useState(false);
   const [openMenssage, setOpenMenssage] = useState(false);
   const [rows, setRows] = useState([]);
   const [alertConfig, setAlertConfig] = useState(initialAlert);
   const [selectRow, setSelectRow] = useState();
   const [categories, setCategories] = useState([]);
+  const [drawerState, setDrawerState] = useState(false);
+  const [eventsCalendar, setEventsCalendar] = useState([]);
 
   // eslint-disable-next-line
   const handleGetRows = useCallback(async () => {
@@ -52,10 +61,22 @@ const PageEphemeris = () => {
           event_ephemeris: item.event_ephemeris,
           event_color: item.event_color,
           event_status: item.event_status,
-          event_categories: item.event_categories
+          event_categories: item.event_categories,
         };
       });
       setRows([...newRow]);
+
+      const newEventCalendar = result.data.map((item) => {
+        return {
+          id: item.id,
+          startAt: item.event_date,
+          endAt: item.event_date,
+          summary: item.event_title,
+          color: item.event_color,
+          calendarID: "ephemeris",
+        };
+      });
+      setEventsCalendar(newEventCalendar);
     } else {
       handleOpenMenssage("Nada encontrado", "warning");
       setRows([]);
@@ -85,7 +106,6 @@ const PageEphemeris = () => {
     }, 3000);
   }, [handleGetRows, handleGetCategories]);
 
-  const [drawerState, setDrawerState] = useState(false);
   const toggleDrawer = (open) => (event) => {
     // if (
     //   event.type === "keydown" &&
@@ -107,17 +127,44 @@ const PageEphemeris = () => {
     setOpenMenssage(false);
   };
 
+  const onEventClick = () => {
+    return;
+  };
+  const onNewEventClick = () => {
+    return;
+  };
+  const onSelectView = () => {
+    return;
+  };
+  const onPageChange = () => {
+    return;
+  };
+  const changeViewList = () => {
+    setViewCalendar(!viewCalendar);
+  };
+
   return (
     <div>
       <h1>Ephemeris</h1>
 
       <Stack
         direction="row"
-        // divider={<Divider orientation="vertical" flexItem />}
+        divider={<Divider orientation="vertical" flexItem />}
         spacing={2}
         justifyContent="flex-end"
         alignItems="center"
       >
+        <FormControlLabel
+          control={
+            <Switch
+              checked={viewCalendar}
+              onChange={changeViewList}
+              color="secondary"
+            />
+          }
+          label="Ver como calendário?"
+        />
+
         <Button variant="outlined" onClick={() => setDrawerState(true)}>
           Cadastrar
         </Button>
@@ -150,15 +197,42 @@ const PageEphemeris = () => {
             <ReactLoading type="spinningBubbles" color="#cccccc" />
           </Stack>
         ) : (
-          <GridListItens
-            listRows={rows}
-            handleList={handleGetRows}
-            handleDelete={serviceEphemeris.deleteItem}
-            OpenAlertMensage={handleOpenMenssage}
-            columns={columns}
-            openModalUpdate={() => setDrawerState(true)}
-            handleSetSelectRow={setSelectRow}
-          />
+          <>
+            {viewCalendar ? (
+              <StyledKalend>
+                <Kalend
+                  onEventClick={onEventClick}
+                  onNewEventClick={onNewEventClick}
+                  events={eventsCalendar}
+                  initialDate={new Date().toISOString()}
+                  hourHeight={60}
+                  initialView={CalendarView.MONTH}
+                  disabledViews={[
+                    CalendarView.DAY,
+                    CalendarView.THREE_DAYS,
+                    CalendarView.WEEK,
+                    CalendarView.AGENDA,
+                  ]}
+                  onSelectView={onSelectView}
+                  onPageChange={onPageChange}
+                  timeFormat={"24"}
+                  weekDayStart={"Monday"}
+                  calendarIDsHidden={["work"]}
+                  language={"en"}
+                />
+              </StyledKalend>
+            ) : (
+              <GridListItens
+                listRows={rows}
+                handleList={handleGetRows}
+                handleDelete={serviceEphemeris.deleteItem}
+                OpenAlertMensage={handleOpenMenssage}
+                columns={columns}
+                openModalUpdate={() => setDrawerState(true)}
+                handleSetSelectRow={setSelectRow}
+              />
+            )}
+          </>
         )}
       </Box>
 
