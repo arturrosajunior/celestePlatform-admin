@@ -17,6 +17,12 @@ import Kalend, { CalendarView } from "kalend";
 import "kalend/dist/styles/index.css";
 import { StyledKalend } from "./style";
 
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
+
 const initialAlert = { textAlert: "", typeAlert: "" };
 const columns = [
   { field: "id", headerName: "id", width: 2 },
@@ -34,6 +40,9 @@ const Alert = React.forwardRef(function Alert(props, ref) {
  */
 
 const PageEphemeris = () => {
+  const [open, setOpenModal] = useState(false);
+  const [idPost, setidPost] = useState("");
+//  
   const [activeLoaging, setActiveLoaging] = useState(true);
   const [viewCalendar, setViewCalendar] = useState(false);
   const [openMenssage, setOpenMenssage] = useState(false);
@@ -43,6 +52,37 @@ const PageEphemeris = () => {
   const [categories, setCategories] = useState([]);
   const [drawerState, setDrawerState] = useState(false);
   const [eventsCalendar, setEventsCalendar] = useState([]);
+
+  const handleCloseModal = () => {
+    setOpenModal(false);
+  };
+
+  const noDelete = () => {
+    handleOpenMenssage(
+      "Cuidado, você pode deletar sem querer!",
+      "warning",
+      true
+    );
+    setSelectRow('');
+    setidPost("");
+    handleCloseModal();
+  };
+
+  const editRow = () => {
+    handleCloseModal();
+    setDrawerState(true)
+  };
+
+  const deleteApi = async () => {
+    const res = await serviceEphemeris.deleteItem(idPost);
+    if (res) {
+      await handleGetRows();
+      handleOpenMenssage("Deletado da lista", "success", true);
+    } else {
+      console.error("ops! ocorreu um erro" + res);
+    }
+    handleCloseModal();
+  };
 
   // eslint-disable-next-line
   const handleGetRows = useCallback(async () => {
@@ -107,13 +147,6 @@ const PageEphemeris = () => {
   }, [handleGetRows, handleGetCategories]);
 
   const toggleDrawer = (open) => (event) => {
-    // if (
-    //   event.type === "keydown" &&
-    //   (event.key === "Tab" || event.key === "Shift")
-    // ) {
-    //   return;
-    // }
-
     setDrawerState(!drawerState);
   };
 
@@ -127,7 +160,13 @@ const PageEphemeris = () => {
     setOpenMenssage(false);
   };
 
-  const onEventClick = () => {
+  const onEventClick = ($event) => {
+    const selectedRows = rows.filter(
+      (row) => $event.id.toString() === ""+row.id
+    );
+    setSelectRow(selectedRows);
+    setidPost($event.id);
+    setOpenModal(true);
     return;
   };
   const onNewEventClick = () => {
@@ -250,6 +289,26 @@ const PageEphemeris = () => {
           {alertConfig.textAlert}
         </Alert>
       </Snackbar>
+      <div>
+        <Dialog
+          open={open}
+          onClose={handleCloseModal}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+        >
+          <DialogTitle id="alert-dialog-title">Deseja excluir?</DialogTitle>
+          <DialogContent>
+            <DialogContentText id="alert-dialog-description">
+              POST: {idPost}
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={noDelete}>Fazer nada</Button>
+            <Button onClick={editRow}>Editar</Button>
+            <Button onClick={deleteApi}>Deletar</Button>
+          </DialogActions>
+        </Dialog>
+      </div>
     </div>
   );
 };
