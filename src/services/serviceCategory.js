@@ -1,6 +1,6 @@
 import API from "services/api";
 
-const endpoint = 'category/';
+const endpoint = 'tags/';
 
 export const getAllItems = () => {
   const res = API.get(`${endpoint}all`)
