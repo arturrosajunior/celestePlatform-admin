@@ -1,9 +1,9 @@
 import API from "services/api";
 
-const endpoint = 'tags/';
+const endpoint = '/tags/';
 
-export const getAllItems = () => {
-  const res = API.get(`${endpoint}all`)
+export const getAllItems = async () => {
+  const res = await API.get(`${endpoint}all`)
     .then((response) => {
       return response.data;
     })

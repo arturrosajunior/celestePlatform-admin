@@ -9,7 +9,7 @@ import MuiAlert from "@mui/material/Alert";
 import ReactLoading from "react-loading";
 import FormCategory from "pages/Category/Form";
 import GridListItens from "components/GridListItens";
-import * as serviceCategory from "services/serviceCategory";
+import * as serviceTag from "services/serviceTag";
 import * as moment from "moment";
 
 const initialAlert = { textAlert: "", typeAlert: "" };
@@ -18,8 +18,8 @@ const columns = [
   { field: "title", headerName: "Titulo", width: 280 },
   { field: "parent_id", headerName: "parent_id", width: 2 },
   { field: "user_id", headerName: "user_id", width: 2 },
-  { field: "date_created", headerName: "Data Created", width: 150 },
-  { field: "date_updated", headerName: "Data Update", width: 150 },
+  { field: "created_at", headerName: "Data Created", width: 150 },
+  { field: "updated_at", headerName: "Data Update", width: 150 },
 ];
 
 const Alert = React.forwardRef(function Alert(props, ref) {
@@ -39,16 +39,18 @@ const PageCategory = () => {
 
   // eslint-disable-next-line
   const handleGetRows = useCallback(async () => {
-    const result = await serviceCategory.getAllItems();
-    if (result.success) {
-      const newRow = result.data.map((item) => {
+    const result = await serviceTag.getAllItems();
+    console.log(result, ' result');
+    if (result) {
+      const newRow = result.map((item) => {
+        console.log(item, ' item');
         return {
           id: item.id,
           title: item.title,
-          parent_id: item.parent_id,
-          user_id: item.user_id,
-          date_created: moment(item.date_created).utc().format('YYYY-MM-DD'),
-          date_updated: moment(item.date_updated).utc().format('YYYY-MM-DD'),
+         // parent_id: item.parent_id,
+          //user_id: item.user_id,
+          created_at: moment(item.created_at).utc().format('YYYY-MM-DD'),
+          updated_at: moment(item.updated_at).utc().format('YYYY-MM-DD'),
         };
       });
       setRows([...newRow]);
@@ -86,7 +88,7 @@ const PageCategory = () => {
 
   return (
     <div>
-      <h1>Categorias</h1>
+      <h1>Tags</h1>
 
       <Stack
         direction="row"
@@ -110,8 +112,8 @@ const PageCategory = () => {
             handleList={handleGetRows}
             handleClose={toggleDrawer(false)}
             OpenAlertMensage={handleOpenMenssage}
-            handlePost={serviceCategory.postItem}
-            handlePut={serviceCategory.putItem}
+            handlePost={serviceTag.postItem}
+            handlePut={serviceTag.putItem}
             valuesRowOnSelected={selectRow}
             setValuesRowOnSelected={setSelectRow}
           />
@@ -119,7 +121,7 @@ const PageCategory = () => {
       </Drawer>
 
       <Box sx={{ mt: 5 }}>
-        <Typography variant="h6">Todas as categorias</Typography>
+        <Typography variant="h6">Todas as Tags</Typography>
 
         {activeLoaging ? (
           <Stack height="100%" alignItems="center" justifyContent="center">
@@ -129,7 +131,7 @@ const PageCategory = () => {
           <GridListItens
             listRows={rows}
             handleList={handleGetRows}
-            handleDelete={serviceCategory.deleteItem}
+            handleDelete={serviceTag.deleteItem}
             OpenAlertMensage={handleOpenMenssage}
             columns={columns}
             openModalUpdate={() => setDrawerState(true)}

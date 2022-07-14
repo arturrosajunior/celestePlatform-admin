@@ -11,7 +11,7 @@ import GridListItens from "components/GridListItens";
 import FormEphemeris from "pages/Ephemeris/Form";
 import Switch from "@mui/material/Switch";
 import * as moment from "moment";
-import * as serviceCategory from "services/serviceCategory";
+import * as serviceCategory from "services/serviceTag";
 import * as serviceEphemeris from "services/serviceEphemeris";
 import Kalend, { CalendarView } from "kalend";
 import "kalend/dist/styles/index.css";

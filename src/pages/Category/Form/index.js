@@ -25,8 +25,8 @@ const FormCategory = (props) => {
     title: "",
     parent_id: 1,
     user_id: 1,
-    date_created: "",
-    date_updated: "",
+    created_at: "",
+    updated_at: "",
   };
 
   const [initialValues, setInitialValues] = useState(
@@ -73,17 +73,17 @@ const FormCategory = (props) => {
     <form onSubmit={formik.handleSubmit}>
       <TextField
         sx={{ display: "none" }}
-        name="date_created"
+        name="created_at"
         type="date"
-        defaultValue={formik.initialValues.date_created}
-        value={formik.date_created}
+        defaultValue={formik.initialValues.created_at}
+        value={formik.created_at}
       />
       <TextField
         sx={{ display: "none" }}
-        name="date_updated"
+        name="updated_at"
         type="date"
-        defaultValue={formik.initialValues.date_updated}
-        value={formik.date_updated}
+        defaultValue={formik.initialValues.updated_at}
+        value={formik.updated_at}
       />
       <TextField
         sx={{ display: "none" }}
