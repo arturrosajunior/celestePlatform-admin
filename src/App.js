@@ -25,9 +25,9 @@ import FeedTwoToneIcon from "@mui/icons-material/FeedTwoTone";
 import GridViewTwoToneIcon from "@mui/icons-material/GridViewTwoTone";
 import LibraryBooksIcon from "@mui/icons-material/LibraryBooks";
 import EventIcon from "@mui/icons-material/Event";
-import CategoryIcon from '@mui/icons-material/Category';
+import CategoryIcon from "@mui/icons-material/Category";
 import PageCategory from "pages/Category";
-
+import PageSection from "pages/Section";
 
 const drawerWidth = 240;
 
@@ -153,13 +153,22 @@ export default function MiniDrawer() {
                 <ListItemText primary="Dashboard" />
               </ListItem>
             </Link>
-                        
-            <Link to="/category">
-              <ListItem button key="Category">
+
+            <Link to="/tag">
+              <ListItem button key="Tag">
                 <ListItemIcon>
                   <CategoryIcon />
                 </ListItemIcon>
-                <ListItemText primary="Category" />
+                <ListItemText primary="Tag" />
+              </ListItem>
+            </Link>
+
+            <Link to="/section">
+              <ListItem button key="Section">
+                <ListItemIcon>
+                  <CategoryIcon />
+                </ListItemIcon>
+                <ListItemText primary="Section" />
               </ListItem>
             </Link>
 
@@ -189,13 +198,13 @@ export default function MiniDrawer() {
                 <ListItemText primary="News" />
               </ListItem>
             </Link>
-            
           </List>
         </Drawer>
         <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
           <DrawerHeader />
           <Switch>
-            <Route path="/category" component={PageCategory} />
+            <Route path="/tag" component={PageCategory} />
+            <Route path="/section" component={PageSection} />
             <Route path="/ephemeris" component={PageEphemeris} />
             <Route path="/news" component={PageNews} />
             <Route path="/library" component={PageLibrary} />

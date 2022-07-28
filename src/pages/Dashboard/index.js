@@ -14,7 +14,6 @@ const PageDashboard = () => {
 
   // eslint-disable-next-line
   const handleGetAll = useCallback(async () => {
-    console.log('dfasd');
     const resultServiceLibrary = await serviceLibrary.getAllItems();
     setResultServiceLibrary(resultServiceLibrary.data.length);
     const resultServiceEphemeris = await serviceEphemeris.getAllItems();
