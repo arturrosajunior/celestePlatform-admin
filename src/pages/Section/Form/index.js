@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import { Grid } from "@mui/material";
 import TextField from "@mui/material/TextField";
 import SaveIcon from "@mui/icons-material/Save";
@@ -8,18 +8,12 @@ import Button from "@mui/material/Button";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
-import { useFormik } from "formik";
 import * as serviceTag from "services/serviceTag";
 import * as serviceSection from "services/serviceSection";
 import Checkbox from "@mui/material/Checkbox";
 import FormControlLabel from "@mui/material/FormControlLabel";
 
-import * as Yup from "yup";
-
 const FormSection = (props) => {
-  //pegando as tags
-  const [tagsList, setTagsList] = useState([]);
-  
   const defaultValues = {
     title: "",
     user_id: 1,
@@ -27,10 +21,82 @@ const FormSection = (props) => {
     updated_at: "",
     tags: [],
   };
+  //pegando as tags
+  const [tagsList, setTagsList] = useState([]);
+  const [initialValues, setInitialValues] = useState(defaultValues);
+  const [titleInput, setTitleInput] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const [initialValues, setInitialValues] = useState(
-    props.valuesRowOnSelected ? props.valuesRowOnSelected[0] : defaultValues
-  );
+  useEffect(() => {
+    let valoresParaPreencher = "";
+    if (props.valuesRowOnSelected) {
+      valoresParaPreencher = props.valuesRowOnSelected[0];
+      setTitleInput(valoresParaPreencher.title);
+      preenchendoCampos();
+    } else {
+      valoresParaPreencher = defaultValues;
+    }
+    if (valoresParaPreencher.tags === undefined) {
+      valoresParaPreencher.tags = [];
+    }
+    setInitialValues(valoresParaPreencher);
+    async function preenchendoCampos() {
+      const idRow = props.valuesRowOnSelected[0].id;
+      const resultTagsRowSelected = await serviceSection.getItem(idRow);
+      setInitialValues(resultTagsRowSelected.data);
+    }
+  }, []);
+
+  const closeModalUnsetValeus = () => {
+    setInitialValues(defaultValues);
+
+    props.setValuesRowOnSelected();
+    props.handleClose();
+  };
+
+  const sendPost = async (values) => {
+    setLoading(true);
+    const res = props.valuesRowOnSelected
+      ? await props.handlePut(props.valuesRowOnSelected[0].id, values)
+      : await props.handlePost(values);
+    if (res) {
+      setLoading(false);
+      await props.handleList();
+      props.OpenAlertMensage("Category save", "success", true);
+      closeModalUnsetValeus();
+      props.handleClose();
+    } else {
+      props.OpenAlertMensage(
+        "Algo deu errado, tente novamente.",
+        "error",
+        false
+      );
+    }
+  };
+
+  const onChange = (e) => {
+    setTitleInput(e.target.value);
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    const data = formData.entries();
+    const dataForSave = defaultValues;
+    dataForSave.title = e.target.title.value;
+    dataForSave.created_at = e.target.created_at.value;
+    dataForSave.updated_at = e.target.updated_at.value;
+    dataForSave.user_id = e.target.user_id.value;
+    let i = 0;
+    for (const entry of data) {
+      if (entry[0] === "tags") {
+        dataForSave.tags[i] = entry[1];
+        i++;
+      }
+    }
+    sendPost(dataForSave);
+  };
+
   // eslint-disable-next-line
   const handleGetRows = async () => {
     let resultTagsRowSelected = "";
@@ -38,20 +104,22 @@ const FormSection = (props) => {
       const idRow = props.valuesRowOnSelected[0].id;
       // eslint-disable-next-line no-const-assign
       resultTagsRowSelected = await serviceSection.getItem(idRow);
-      setInitialValues(resultTagsRowSelected.data)
+      setInitialValues(resultTagsRowSelected.data);
     }
 
     const result = await serviceTag.getAllItems();
     if (result) {
       const newTag = result.map((item) => {
         if (props.valuesRowOnSelected) {
-          // resultTagsRowSelected.data.tags.map((tag, i) => initialValues.tags[i] = tag.id );
           return {
             id: item.id,
             title: item.title,
-            checked: resultTagsRowSelected.data.tags.some(
-              (tagRow) => item.id.toString() === "" + tagRow.id
-            ),
+            checked: resultTagsRowSelected.data.tags.some((tagRow) => {
+              resultTagsRowSelected.data.tags.map(
+                (tag, i) => (initialValues.tags[i] = tag.id)
+              );
+              return item.id.toString() === "" + tagRow.id;
+            }),
           };
         } else {
           return {
@@ -67,89 +135,30 @@ const FormSection = (props) => {
       console.log("sem tags no banco");
       setTagsList([]);
     }
-  }
-
-  const [loading, setLoading] = useState(false);
-
-  const validationSchema = Yup.object().shape({
-    title: Yup.string().required("O campo é obrigatório"),
-  });
-
-  const closeModalUnsetValeus = () => {
-    setInitialValues(defaultValues);
-
-    props.setValuesRowOnSelected();
-    props.handleClose();
   };
 
-  const formik = useFormik({
-    initialValues,
-    onSubmit: (values) => {
-      console.log("values",values)
-      sendPost(values);
-    },
-    validationSchema: validationSchema,
-  });
-
-  async function sendPost(values) {
-    console.log("values", values);
-    setLoading(true);
-    const res = props.valuesRowOnSelected
-      ? await props.handlePut(props.valuesRowOnSelected[0].id, values)
-      : await props.handlePost(values);
-    if (res) {
-      setLoading(!res);
-      await props.handleList();
-      props.OpenAlertMensage("Category save", "success", true);
-      closeModalUnsetValeus();
-      props.handleClose();
-    } else {
-      props.OpenAlertMensage(
-        "Algo deu errado, tente novamente.",
-        "error",
-        false
-      );
-    }
-  }
-  
-
-  useEffect(() => {    
-    //setTimeout(() => handleGetRows(), 3000);
-    handleGetRows()
+  useEffect(() => {
+    handleGetRows();
   }, []);
-  useEffect(()=>{
-    console.log("initialValues",initialValues)
-  },[initialValues])
 
   return (
-    <form onSubmit={formik.handleSubmit}>
+    <form onSubmit={handleSubmit}>
       <TextField
         sx={{ display: "none" }}
         name="created_at"
-        type="date"
-        defaultValue={formik.initialValues.created_at}
-        value={formik.created_at}
+        type="text"
+        value={initialValues.created_at}
       />
       <TextField
         sx={{ display: "none" }}
         name="updated_at"
-        type="date"
-        defaultValue={formik.initialValues.updated_at}
-        value={formik.updated_at}
-      />
-      <TextField
-        sx={{ display: "none" }}
-        name="parent_id"
-        defaultValue={formik.initialValues.parent_id}
-        value={formik.parent_id}
-        onChange={formik.handleChange}
+        type="text"
+        value={initialValues.updated_at}
       />
       <TextField
         sx={{ display: "none" }}
         name="user_id"
-        defaultValue={formik.initialValues.user_id}
-        value={formik.user_id}
-        onChange={formik.handleChange}
+        value={initialValues.user_id}
       />
       <Card variant="outlined">
         <CardContent>
@@ -158,33 +167,30 @@ const FormSection = (props) => {
               <TextField
                 name="title"
                 label="Título"
-                defaultValue={formik.initialValues.title}
-                value={formik.title}
-                onChange={formik.handleChange}
-                error={formik.touched.title && Boolean(formik.errors.title)}
-                helperText={formik.touched.title && formik.errors.title}
+                defaultValue={titleInput}
+                value={titleInput}
+                onChange={onChange}
                 fullWidth
               />
             </Grid>
           </Grid>
           <Grid container spacing={2} columns={12}>
             <Grid item md={12}>
-              {tagsList.map((tag) => {
-                return (
-                  <FormControlLabel
-                    value={tag.id}
-                    control={
-                      <Checkbox 
-                      name="tags"
-                      checked={tag.checked} 
-                      onChange={formik.handleChange}
-                       />
-                    }
-                    label={tag.title}
-                    labelPlacement="end"
-                  />
-                );
-              })}
+              {tagsList.length === 0
+                ? "Aguarde buscando as tags"
+                : tagsList.map((tag) => {
+                    return (
+                      <FormControlLabel
+                        key={tag.id}
+                        value={tag.id}
+                        control={
+                          <Checkbox name="tags" defaultChecked={tag.checked} />
+                        }
+                        label={tag.title}
+                        labelPlacement="end"
+                      />
+                    );
+                  })}
             </Grid>
           </Grid>
         </CardContent>

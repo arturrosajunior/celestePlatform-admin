@@ -59,7 +59,7 @@ const GridListItens = (props) => {
           rows={props.listRows}
           columns={props.columns}
           checkboxSelection={false}
-          pageSize={10}
+          pageSize={50}
           onSelectionModelChange={(ids) => {
             setidPost(ids.toString());
             const selectedRows = props.listRows.filter(
