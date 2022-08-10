@@ -7,7 +7,7 @@ import Drawer from "@mui/material/Drawer";
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
 import ReactLoading from "react-loading";
-import FormSection from "pages/Section/Form";
+import FormIndustry from "pages/Industry/Form";
 import GridListItens from "components/GridListItens";
 import * as serviceIndustry from "services/serviceIndustry";
 import * as moment from "moment";
@@ -105,7 +105,7 @@ const PageIndustry = () => {
           noValidate
           autoComplete="off"
         >
-          <FormSection
+          <FormIndustry
             handleList={handleGetRows}
             handleClose={toggleDrawer(false)}
             OpenAlertMensage={handleOpenMenssage}

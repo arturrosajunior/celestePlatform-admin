@@ -13,7 +13,7 @@ import * as serviceIndustry from "services/serviceIndustry";
 import Checkbox from "@mui/material/Checkbox";
 import FormControlLabel from "@mui/material/FormControlLabel";
 
-const FormSection = (props) => {
+const FormIndustry = (props) => {
   const defaultValues = {
     title: "",
     user_id: 1,
@@ -109,7 +109,6 @@ const FormSection = (props) => {
 
     console.log('fdsfsdfds')
     const result = await serviceTag.getAllItems();
-    console.log(props.valuesRowOnSelected, ' props.valuesRowOnSelected' )
     if (result) {
       const newTag = result.map((item) => {
         if (props.valuesRowOnSelected) {
@@ -121,7 +120,6 @@ const FormSection = (props) => {
               resultTagsRowSelected.data.tags.map(
                 (tag, i) => (initialValues.tags[i] = tag.id)
               );
-              console.log(item.id.toString(), tagRow.id);
               return item.id.toString() === "" + tagRow.id;
             }),
           };
@@ -223,4 +221,4 @@ const FormSection = (props) => {
   );
 };
 
-export default FormSection;
+export default FormIndustry;
