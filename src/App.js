@@ -28,6 +28,7 @@ import EventIcon from "@mui/icons-material/Event";
 import CategoryIcon from "@mui/icons-material/Category";
 import PageCategory from "pages/Category";
 import PageSection from "pages/Section";
+import PageIndustry from "pages/Industry";
 
 const drawerWidth = 240;
 
@@ -171,6 +172,15 @@ export default function MiniDrawer() {
                 <ListItemText primary="Section" />
               </ListItem>
             </Link>
+            
+            <Link to="/industry">
+              <ListItem button key="Industry">
+                <ListItemIcon>
+                  <CategoryIcon />
+                </ListItemIcon>
+                <ListItemText primary="Industry" />
+              </ListItem>
+            </Link>
 
             <Link to="/library">
               <ListItem button key="Library">
@@ -205,6 +215,7 @@ export default function MiniDrawer() {
           <Switch>
             <Route path="/tag" component={PageCategory} />
             <Route path="/section" component={PageSection} />
+            <Route path="/industry" component={PageIndustry} />
             <Route path="/ephemeris" component={PageEphemeris} />
             <Route path="/news" component={PageNews} />
             <Route path="/library" component={PageLibrary} />
